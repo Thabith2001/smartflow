@@ -32,7 +32,6 @@ export default function Header() {
       {/* HEADER */}
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-blue-900 shadow-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 gap-4">
-          {/* MOBILE MENU BUTTON & LOGO */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setOpen(true)}
@@ -45,7 +44,7 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* DESKTOP SEARCH BAR (CENTERED/EXPANDED) */}
+          {/* DESKTOP SEARCH BAR  */}
           <div className="hidden md:flex flex-1 max-w-md mx-4">
             <div className="relative w-full group">
               <span className="absolute inset-y-0 left-3 flex items-center text-zinc-400 group-focus-within:text-yellow-400 transition-colors">
@@ -87,7 +86,7 @@ export default function Header() {
 
             <Link
               href="/auth/login"
-              className="flex items-center gap-2 bg-yellow-400 px-4 py-2 text-sm font-semibold text-blue-900 hover:bg-yellow-300 transition-colors"
+              className="flex items-center gap-2 bg-yellow-400 px-4 py-2 rounded-md text-sm font-semibold text-blue-900 hover:bg-yellow-300 transition-colors"
             >
               <FaSignInAlt />
               <span className="hidden sm:inline">Login</span>
@@ -95,7 +94,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* SECONDARY DESKTOP NAV (Optional sub-header style) */}
+        {/* SECONDARY DESKTOP NAV  */}
         <nav className="hidden md:flex items-center justify-center gap-8 py-2 border-t border-white/5 bg-white">
           {['Dashboard', 'Properties', 'Tenants', 'Payments', 'Reports'].map((item) => (
             <Link
@@ -111,7 +110,7 @@ export default function Header() {
 
       {/* LEFT SLIDE MENU */}
       <aside
-        className={`fixed left-0 top-0 z-50 h-full w-72 transform bg-blue-900 shadow-2xl transition-transform duration-300 ease-in-out flex flex-col md:hidden
+        className={`fixed left-0 top-0 z-50 h-full w-72 transform bg-blue-950 shadow-2xl transition-transform duration-300 ease-in-out flex flex-col md:hidden
         ${open ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
@@ -152,11 +151,11 @@ export default function Header() {
             href="/auth/login"
             className="flex items-center gap-3 text-white hover:text-yellow-400 mb-8 group"
           >
-            <FaUserCircle size={24} className="group-hover:scale-110 transition-transform" />
-            <span className="font-semibold text-lg">My Account</span>
+            <FaUserCircle size={20} className="group-hover:scale-110 transition-transform" />
+            <span className="font-semibold text-md">My Account</span>
           </Link>
 
-          <div className="flex flex-col gap-2 text-sm text-zinc-400 mb-6">
+          <div className="flex flex-col gap-2 text-xs text-zinc-400 mb-6">
             <Link href="/faq" className="hover:text-white">
               FAQ
             </Link>
