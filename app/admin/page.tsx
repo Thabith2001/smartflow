@@ -43,13 +43,14 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex flex-col font-sans">
-      {/* HEADER  */}
+    <div className="min-h-screen bg-zinc-50 flex flex-col">
+      {/* HEADER */}
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-blue-900 shadow-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
           <Link href="/" className="text-xl font-extrabold tracking-tight text-white">
             SMART<span className="text-yellow-400">FLOW</span>
           </Link>
+
           <nav className="flex gap-6 text-sm font-medium text-white/80">
             <Link href="/" className="hover:text-yellow-400 transition-colors">
               Home
@@ -59,27 +60,36 @@ export default function AdminLoginPage() {
       </header>
 
       {/* MAIN CONTENT */}
-      <main className="flex-grow flex items-center justify-center p-6 py-12">
-        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-white border border-zinc-200 shadow-sm overflow-hidden rounded-lg">
-          {/* LEFT – LOGIN */}
-          <div className="p-10 md:p-14">
-            <h1 className="text-3xl font-bold text-blue-950 uppercase">Staff Login</h1>
-            <p className="text-sm text-slate-500 mt-2">Secure access for Admin & Managers</p>
+      <main className="flex-grow flex flex-col items-center justify-center p-4">
+        <div className="mb-8 w-full max-w-4xl rounded-lg border border-blue-200 bg-blue-50 px-5 py-3 text-sm text-blue-800 flex items-center gap-3">
+          <span className="flex-shrink-0 bg-blue-800 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold">
+            !
+          </span>
+          Authorized access only. Unauthorized misuse is strictly monitored.
+        </div>
 
-            <form onSubmit={handleLogin} className="mt-10 space-y-6">
+        <div className="w-full max-w-4xl overflow-hidden rounded border bg-white shadow-sm md:flex border-zinc-200">
+          {/* LEFT – LOGIN */}
+          <div className="w-full p-8 md:p-12 md:w-1/2">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-zinc-900 uppercase">Staff Login</h2>
+              <p className="text-zinc-500 text-sm mt-1">Secure access for Admin & Managers</p>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-5">
               {/* Email */}
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <label className="mb-1.5 block text-sm font-semibold text-zinc-700">
                   Email Address
                 </label>
-                <div className="relative mt-2">
-                  <FaUserShield className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+                <div className="relative group">
+                  <FaUserShield className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                   <input
                     type="email"
+                    placeholder="admin@pms.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@pms.com"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none"
+                    className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     required
                   />
                 </div>
@@ -87,17 +97,15 @@ export default function AdminLoginPage() {
 
               {/* Password */}
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Password
-                </label>
-                <div className="relative mt-2">
-                  <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+                <label className="mb-1.5 block text-sm font-semibold text-zinc-700">Password</label>
+                <div className="relative group">
+                  <FaLock className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                   <input
                     type="password"
+                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-4 pl-12 pr-4 text-sm font-medium focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none"
+                    className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     required
                   />
                 </div>
@@ -112,10 +120,32 @@ export default function AdminLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-4 rounded-xl shadow-blue-900/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3 uppercase tracking-widest text-xs"
+                className="w-full rounded-lg bg-blue-900 py-3 text-sm font-bold text-white shadow-lg shadow-blue-900/20 hover:bg-blue-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
               >
                 {loading ? (
-                  'Authenticating...'
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      ></path>
+                    </svg>
+                    Authenticating...
+                  </>
                 ) : (
                   <>
                     Secure Login <FaArrowRight />
@@ -123,58 +153,49 @@ export default function AdminLoginPage() {
                 )}
               </button>
             </form>
-
-            <p className="text-xs text-center text-slate-400 mt-8">
-              Need help?{' '}
-              <Link href="#" className="text-blue-600 font-bold hover:underline">
-                Contact Technical Support
-              </Link>
-            </p>
           </div>
 
           {/* RIGHT – PMS FEATURES */}
-          <div className="hidden md:flex bg-gradient-to-br from-blue-950 to-blue-900 text-white p-14 flex-col justify-center relative">
-            <div className="absolute -top-20 -right-20 w-72 h-72 bg-yellow-400/10 rounded-full blur-3xl" />
-            <div className="relative">
-              <span className="bg-yellow-500 text-blue-950 text-[10px] font-black uppercase px-3 py-1 rounded-full">
-                Internal Access Only
-              </span>
+          <div className="w-full bg-blue-900 p-12 text-white md:w-1/2 flex flex-col justify-center relative overflow-hidden">
+            <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/5" />
 
-              <h2 className="text-4xl font-bold mt-6 leading-tight">
-                Control <br />
-                <span className="text-yellow-400">Panel</span> Dashboard
+            <div className="relative z-10">
+              <h2 className="mb-6 text-3xl font-bold">
+                Welcome <br />
+                <span className="text-yellow-400">Staff</span>
               </h2>
-
-              <p className="text-blue-200/70 text-sm mt-4 max-w-sm">
-                Authorized personnel only. All access attempts are logged and monitored.
+              <p className="mb-8 text-blue-100 leading-relaxed">
+                The all-in-one platform for internal staff management. Monitor and manage your
+                operations effectively.
               </p>
 
-              <div className="mt-10 space-y-5">
-                {[
-                  'Portfolio Oversight',
-                  'Financial Approval Flow',
-                  'System Configuration',
-                  'Audit & Compliance Logs',
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 text-sm">
-                    <FaCheckCircle className="text-yellow-400" />
-                    {item}
-                  </div>
-                ))}
-              </div>
+              <ul className="space-y-4 text-sm">
+                <li className="flex items-center gap-3">
+                  <span className="text-yellow-400">✓</span> Portfolio Oversight
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="text-yellow-400">✓</span> Financial Approval Flow
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="text-yellow-400">✓</span> System Configuration
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="text-yellow-400">✓</span> Audit & Compliance Logs
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       </main>
 
-      {/* TWO-TONE BRANDED FOOTER */}
-      <footer className="bg-zinc-100 mt-auto border-t border-zinc-300">
+      {/* FOOTER */}
+      <footer className="bg-zinc-100 mt-12 border-t border-zinc-300">
         <div className="mx-auto max-w-7xl flex justify-between items-center px-8 py-6 border-b border-zinc-300">
           <div className="flex items-center space-x-3">
             <div className="bg-blue-900 text-white font-bold px-3 py-1.5 rounded text-sm uppercase tracking-wider">
               SmartFlow
             </div>
-            <span className="text-zinc-700 font-bold text-sm hidden sm:inline text-nowrap">
+            <span className="text-zinc-700 font-bold text-sm hidden sm:inline">
               Staff Portal • Internal Systems®
             </span>
           </div>
