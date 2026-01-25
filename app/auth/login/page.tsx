@@ -46,7 +46,7 @@ export default function LoginPage() {
         <div className="w-full max-w-4xl overflow-hidden rounded border bg-white shadow-sm md:flex border-zinc-200">
           <div className="w-full p-8 md:p-12 md:w-1/2">
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-zinc-900">User / Vendor Login</h2>
+              <h2 className="text-2xl font-bold text-zinc-900 uppercase">Login</h2>
               <p className="text-zinc-500 text-sm mt-1">
                 Please enter your credentials to access your dashboard.
               </p>
