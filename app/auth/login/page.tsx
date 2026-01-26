@@ -7,6 +7,7 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaEnvelope, FaLock, FaUser } from 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,9 +104,32 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-lg bg-blue-900 py-3 text-sm font-bold text-white shadow-lg shadow-blue-900/20 hover:bg-blue-800 active:scale-[0.98] transition-all"
+                disabled={loading}
+                className="w-full rounded-lg bg-blue-900 py-3 text-sm font-bold text-white shadow-lg shadow-blue-900/20 hover:bg-blue-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
               >
-                Login to SmartFlow
+                {loading ? (
+                  <>
+                    <svg
+                      className="h-5 w-5 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                    </svg>
+                    Logging in...
+                  </>
+                ) : (
+                  'Login to SmartFlow'
+                )}
               </button>
             </form>
           </div>
