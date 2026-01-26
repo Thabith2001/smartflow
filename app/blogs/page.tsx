@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useMemo, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import {
@@ -10,9 +11,18 @@ import {
   FaClock,
   FaArrowRight,
 } from 'react-icons/fa';
-import { useState } from 'react';
 
-const blogPosts = [
+interface BlogPost {
+  id: number;
+  category: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  readTime: string;
+  image: string;
+}
+
+const blogPosts: BlogPost[] = [
   {
     id: 1,
     category: 'Investment',
@@ -123,7 +133,6 @@ const blogPosts = [
     image:
       'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=1000',
   },
-
   {
     id: 11,
     category: 'Market',
@@ -144,100 +153,24 @@ const blogPosts = [
     image:
       'https://images.unsplash.com/photo-1616489953149-808620242270?auto=format&fit=crop&q=80&w=1000',
   },
-  {
-    id: 13,
-    category: 'Land',
-    title: 'Soil Testing 101',
-    excerpt: 'Why every land buyer needs a perc test before signing the final contract...',
-    date: 'Dec 20, 2025',
-    readTime: '6 min',
-    image:
-      'https://images.unsplash.com/photo-1500322969630-a26ab6eb64bb?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: 14,
-    category: 'Legal',
-    title: 'Title Insurance Explained',
-    excerpt:
-      'Don’t lose your property to old claims—everything you need to know about title safety...',
-    date: 'Dec 15, 2025',
-    readTime: '5 min',
-    image:
-      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: 15,
-    category: 'Architecture',
-    title: 'The Rise of A-Frames',
-    excerpt: 'Why modern cabin designs are becoming the preferred second home for city dwellers...',
-    date: 'Dec 10, 2025',
-    readTime: '7 min',
-    image:
-      'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: 16,
-    category: 'Tips',
-    title: 'Smart Home Security',
-    excerpt: 'Comparing the best integrated security systems for high-value residential estates...',
-    date: 'Dec 05, 2025',
-    readTime: '8 min',
-    image:
-      'https://images.unsplash.com/photo-1558002038-103792e17734?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: 17,
-    category: 'Investment',
-    title: 'Commercial vs Residential',
-    excerpt: 'Which asset class offers better ROI in the current shifting urban landscape...',
-    date: 'Dec 01, 2025',
-    readTime: '11 min',
-    image:
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: 18,
-    category: 'Apartment',
-    title: 'Lease Negotiation Secrets',
-    excerpt: 'How to get better amenities or rent credits in luxury apartment buildings...',
-    date: 'Nov 28, 2025',
-    readTime: '5 min',
-    image:
-      'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: 19,
-    category: 'Lifestyle',
-    title: 'Expat Living in the US',
-    excerpt: 'A guide for international buyers looking to relocate to Florida or California...',
-    date: 'Nov 25, 2025',
-    readTime: '9 min',
-    image:
-      'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000',
-  },
-  {
-    id: 20,
-    category: 'Architecture',
-    title: 'Glass Walls & Privacy',
-    excerpt:
-      'Innovative smart-glass solutions for modern villas that want both views and seclusion...',
-    date: 'Nov 20, 2025',
-    readTime: '6 min',
-    image:
-      'https://images.unsplash.com/photo-1600607687940-4e524cb350b1?auto=format&fit=crop&q=80&w=1000',
-  },
 ];
 
 export default function BlogPage() {
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
+  const itemsPerPage = 9;
 
-  const filteredPosts = blogPosts.filter(
-    (post) =>
-      post.title.toLowerCase().includes(search.toLowerCase()) ||
-      post.category.toLowerCase().includes(search.toLowerCase())
-  );
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  const filteredPosts = useMemo(() => {
+    return blogPosts.filter(
+      (post) =>
+        post.title.toLowerCase().includes(search.toLowerCase()) ||
+        post.category.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [search]);
 
   const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
   const currentItems = filteredPosts.slice(
@@ -245,76 +178,65 @@ export default function BlogPage() {
     currentPage * itemsPerPage
   );
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 350, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-[#F2F4F7] flex flex-col font-sans">
       <Header />
 
-      {/* Blog Hero Section */}
-
-      <section className="relative py-28 text-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000"
-            alt="Blog Background"
-            className="w-full h-full object-cover"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A1D37]/40 via-[#0A1D37]/80 to-[#0A1D37]/95 backdrop-blur-[2px]"></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <span className="text-[#FFB800] font-black uppercase tracking-[0.3em] text-xs block mb-4">
-            Insights & News
-          </span>
-          <h1 className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter mb-8">
-            The <span className="text-[#FFB800]">Knowledge</span> Base
+      {/* Hero Section  */}
+      <section className="relative py-24 text-white overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000"
+          alt="Blog Hero"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="relative max-w-[1400px] mx-auto px-6">
+          <h1 className="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none">
+            The <span className="text-[#FFB800]">Knowledge</span> Hub
           </h1>
+          <p className="mt-6 text-zinc-300 font-bold uppercase tracking-[0.3em] text-xs flex items-center gap-3">
+            <span className="w-12 h-[2px] bg-[#FFB800]"></span> Insights, Trends & Market Analytics
+          </p>
 
-          <div className="max-w-xl mx-auto relative group">
-            <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#1E3A8A] transition-colors z-20" />
+          <div className="mt-10 max-w-xl relative group">
+            <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#FFB800] transition-colors" />
             <input
-              className="w-full py-5 pl-14 pr-6 rounded-lg bg-white border-none outline-none focus:ring-4 ring-[#FFB800]/30 transition-all text-lg shadow-2xl relative z-10 text-black"
-              placeholder="Search articles, tips, or categories..."
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setCurrentPage(1);
-              }}
+              className="w-full py-4 pl-14 pr-6 bg-white/10 backdrop-blur-md border border-white/20 outline-none focus:border-[#FFB800] transition-all text-sm text-white placeholder:text-zinc-400"
+              placeholder="Search by topic or category..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
         </div>
       </section>
 
       {/* Blog Grid */}
-      <section className="max-w-7xl mx-auto px-6 py-20 flex-1">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
-          {currentItems.map((post, index) => {
-            const absoluteIndex = (currentPage - 1) * itemsPerPage + index;
-
-            return (
-              <article key={post.id} className="group cursor-pointer">
-                <div className="relative h-64 mb-6 overflow-hidden rounded-sm bg-zinc-100">
+      <main className="max-w-[1400px] mx-auto px-6 py-16 flex-1 w-full">
+        {currentItems.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {currentItems.map((post, index) => (
+              <article
+                key={post.id}
+                className="group bg-white border border-zinc-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
+              >
+                <div className="relative aspect-video overflow-hidden bg-zinc-100">
                   <img
                     src={post.image}
                     alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-
-                  {/* Category Overlay */}
-                  <div className="absolute bottom-0 left-0 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#1E3A8A]">
+                  <div className="absolute top-0 left-0 bg-blue-900 text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest">
                     {post.category}
                   </div>
-
-                  {/* Trending Badge  */}
-                  {absoluteIndex < 10 && (
-                    <div className="absolute top-4 right-4 bg-[#FFB800] text-[#0A1D37] text-[10px] font-black px-3 py-1 uppercase tracking-tighter shadow-lg">
-                      Trending
-                    </div>
-                  )}
                 </div>
 
-                {/* Content */}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-4 text-zinc-400 text-xs font-bold uppercase tracking-widest">
+                <div className="p-8 flex-1 flex flex-col">
+                  <div className="flex items-center gap-4 text-zinc-400 text-[10px] font-black uppercase tracking-widest mb-4">
                     <span className="flex items-center gap-1.5">
                       <FaCalendarAlt className="text-[#FFB800]" /> {post.date}
                     </span>
@@ -323,75 +245,81 @@ export default function BlogPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-black text-[#0A1D37] leading-tight group-hover:text-[#1E3A8A] transition-colors line-clamp-2 uppercase tracking-tighter">
+                  <h3 className="text-xl font-black text-blue-900 uppercase tracking-tight leading-tight mb-4 group-hover:text-[#FFB800] transition-colors">
                     {post.title}
                   </h3>
 
-                  <p className="text-zinc-500 text-sm leading-relaxed line-clamp-3">
+                  <p className="text-zinc-500 text-sm leading-relaxed mb-6 line-clamp-3">
                     {post.excerpt}
                   </p>
 
-                  <div className="pt-4 flex items-center gap-2 text-[#1E3A8A] font-black text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
-                    Read Story <FaArrowRight />
+                  <div className="mt-auto pt-6 border-t border-zinc-100 flex items-center gap-2 text-blue-900 font-black text-xs uppercase tracking-widest group-hover:gap-4 transition-all">
+                    Read Full Analysis <FaArrowRight className="text-[#FFB800]" />
                   </div>
                 </div>
               </article>
-            );
-          })}
-        </div>
-
-        {/* Pagination - Right Aligned */}
-        {totalPages > 1 && (
-          <div className="mt-24 flex justify-end items-center gap-3">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="p-3 border border-zinc-200 rounded-md hover:bg-[#1E3A8A] hover:text-white transition-all disabled:opacity-30"
-              disabled={currentPage === 1}
-            >
-              <FaChevronLeft />
-            </button>
-
-            {[...Array(totalPages)].map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`w-12 h-12 rounded-md font-black transition-all border ${
-                  currentPage === i + 1
-                    ? 'bg-[#1E3A8A] border-[#1E3A8A] text-white shadow-xl'
-                    : 'bg-white text-[#1E3A8A] border-zinc-200 hover:border-[#1E3A8A]'
-                }`}
-              >
-                {i + 1}
-              </button>
             ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 bg-white border border-dashed border-zinc-300">
+            <p className="text-zinc-400 uppercase font-black text-sm tracking-widest">
+              No articles found matching your search
+            </p>
+          </div>
+        )}
 
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-16 flex justify-center md:justify-end items-center gap-2">
             <button
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              className="p-3 border border-zinc-200 rounded-md hover:bg-[#1E3A8A] hover:text-white transition-all disabled:opacity-30"
-              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="w-10 h-10 flex items-center justify-center border bg-white text-blue-900 hover:bg-[#FFB800] disabled:opacity-30 transition-colors"
             >
-              <FaChevronRight />
+              <FaChevronLeft size={12} />
+            </button>
+            <div className="flex gap-1">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`w-10 h-10 text-xs font-black border transition-all ${
+                    currentPage === i + 1
+                      ? 'bg-blue-900 text-white border-blue-900'
+                      : 'bg-white text-blue-900 border-zinc-200'
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="w-10 h-10 flex items-center justify-center border bg-white text-blue-900 hover:bg-[#FFB800] disabled:opacity-30 transition-colors"
+            >
+              <FaChevronRight size={12} />
             </button>
           </div>
         )}
-      </section>
+      </main>
 
       {/* Newsletter Section */}
-      <section className="bg-[#0A1D37] py-20">
+      <section className="bg-blue-900 py-20">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">
-            Never Miss an <span className="text-[#FFB800]">Update</span>
+          <h2 className="text-4xl font-black text-white uppercase tracking-tighter mb-4">
+            Elite <span className="text-[#FFB800]">Newsletter</span>
           </h2>
-          <p className="text-zinc-400 mb-8 font-medium">
-            Join 5,000+ investors and get the latest property market insights delivered weekly.
+          <p className="text-zinc-300 mb-10 font-bold uppercase tracking-widest text-xs">
+            Market analytics delivered directly to your inbox.
           </p>
-          <form className="flex flex-col md:flex-row gap-4">
+          <form className="flex flex-col md:flex-row gap-0 max-w-2xl mx-auto">
             <input
               type="email"
-              placeholder="Enter your email address"
-              className="flex-1 px-6 py-4 rounded-sm bg-white/5 border border-white/10 text-white outline-none focus:border-[#FFB800] transition-colors"
+              placeholder="YOUR EMAIL ADDRESS"
+              className="flex-1 px-6 py-4 bg-white text-blue-900 font-bold outline-none text-xs tracking-widest"
             />
-            <button className="bg-[#FFB800] text-[#0A1D37] px-10 py-4 font-black uppercase tracking-widest hover:bg-white transition-all">
+            <button className="bg-[#FFB800] text-blue-900 px-10 py-4 font-black uppercase tracking-widest hover:bg-white transition-all">
               Subscribe
             </button>
           </form>
