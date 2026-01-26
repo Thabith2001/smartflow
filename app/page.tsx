@@ -76,7 +76,7 @@ export default function HomePage() {
       {/* --- SCROLL TO TOP BUTTON --- */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-[99] p-4 bg-[#0A1D37] text-[#FFB800] rounded-sm shadow-2xl border border-[#FFB800]/20 transition-all duration-500 transform hover:bg-[#FFB800] hover:text-[#0A1D37] ${
+        className={`fixed bottom-8 right-8 z-[99] p-4 bg-blue-900 text-[#FFB800] rounded-sm shadow-2xl border border-gray-400 transition-all duration-500 transform hover:bg-[#FFB800] hover:text-[#0A1D37] ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
         }`}
       >

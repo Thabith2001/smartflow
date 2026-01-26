@@ -128,31 +128,31 @@ export default function Footer() {
                 <div className="flex gap-3">
                   <a
                     href="#"
-                    className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
+                    className="w-8 h-8  bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
                   >
                     <FaLinkedinIn size={14} />
                   </a>
                   <a
                     href="#"
-                    className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
+                    className="w-8 h-8  bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
                   >
                     <FaTiktok size={14} />
                   </a>
                   <a
                     href="#"
-                    className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
+                    className="w-8 h-8  bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
                   >
                     <FaInstagram size={14} />
                   </a>
                   <a
                     href="#"
-                    className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
+                    className="w-8 h-8  bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
                   >
                     <FaFacebookF size={14} />
                   </a>
                   <a
                     href="#"
-                    className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
+                    className="w-8 h-8  bg-blue-900 text-white flex items-center justify-center hover:bg-yellow-500 transition-colors"
                   >
                     <FaYoutube size={14} />
                   </a>
