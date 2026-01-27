@@ -2,21 +2,45 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { FaFacebookF, FaTwitter, FaInstagram, FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLock,
+  FaUser,
+  FaExclamationTriangle,
+} from 'react-icons/fa';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ email, password });
+    setLoading(true);
+    setErrorMessage('');
+
+    // --- LOGIC---
+    setTimeout(() => {
+      const isTechnician = email.toLowerCase().includes('tech');
+      const isApprovedByAdmin = false;
+
+      if (isTechnician && !isApprovedByAdmin) {
+        setErrorMessage('Technician account pending Admin approval. Please contact management.');
+        setLoading(false);
+      } else {
+        console.log('Login Successful', { email, password });
+
+        setLoading(false);
+      }
+    }, 1500);
   };
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col">
-      {/* HEADER - Matched to PMS Header */}
+      {/* HEADER  */}
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-blue-900 shadow-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
           <Link href="/" className="text-xl font-extrabold tracking-tight text-white">
@@ -52,6 +76,13 @@ export default function LoginPage() {
                 Please enter your credentials to access your dashboard.
               </p>
             </div>
+
+            {/* ROLE ERROR DISPLAY */}
+            {errorMessage && (
+              <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-xs font-bold flex items-center gap-2">
+                <FaExclamationTriangle /> {errorMessage}
+              </div>
+            )}
 
             <form onSubmit={handleLogin} className="space-y-5">
               <div>
@@ -125,7 +156,7 @@ export default function LoginPage() {
                       />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                     </svg>
-                    Logging in...
+                    Verifying...
                   </>
                 ) : (
                   'Login to SmartFlow'
@@ -134,7 +165,7 @@ export default function LoginPage() {
             </form>
           </div>
 
-          {/* RIGHT – INFO PANEL  */}
+          {/* RIGHT  */}
           <div className="w-full bg-blue-900 p-12 text-white md:w-1/2 flex flex-col justify-center relative overflow-hidden">
             <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/5" />
 
@@ -167,7 +198,7 @@ export default function LoginPage() {
         </div>
       </main>
 
-      {/* FOOTER - Matched Sidebar/Header Style */}
+      {/* FOOTER */}
       <footer className="bg-zinc-100 mt-12 border-t border-zinc-300">
         {/* Top section */}
         <div className="mx-auto max-w-7xl flex justify-between items-center px-8 py-6 border-b border-zinc-300">

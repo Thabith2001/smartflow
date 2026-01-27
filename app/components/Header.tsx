@@ -9,148 +9,225 @@ import {
   FaTimes,
   FaSearch,
   FaUserCircle,
+  FaSignOutAlt,
+  FaChevronDown,
+  FaChevronRight,
   FaFacebookF,
   FaTwitter,
   FaInstagram,
-  FaChevronRight,
+  FaLinkedinIn,
+  FaShieldAlt,
 } from 'react-icons/fa';
 
-export default function Header() {
+export default function Header({ user, isLoggedIn, onLogout }) {
   const [open, setOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Lands', href: '/lands' },
     { name: 'Houses', href: '/houses' },
     { name: 'Apartments', href: '/apartments' },
-    { name: 'Portfolio Properties', href: '/portfolio' },
+    { name: 'Portfolio', href: '/portfolio' },
     { name: 'Blogs', href: '/blogs' },
     { name: 'Contact Us', href: '/contact' },
   ];
 
   return (
     <>
-      {/* OVERLAY */}
+      {/* MOBILE OVERLAY */}
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-[60] bg-blue-900/60 backdrop-blur-sm md:hidden"
         />
       )}
 
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 w-full shadow-lg">
-        {/* MAIN TOP BAR */}
+      <header className="sticky top-0 z-50 w-full shadow-2xl">
+        {/* TOP BAR  */}
         <div className="bg-blue-900 border-b border-white/10">
-          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 gap-4">
+          <div className="mx-auto flex h-16 md:h-20 max-w-7xl items-center justify-between px-4 md:px-6 gap-4">
+            {/* LOGO */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setOpen(true)}
-                className="md:hidden rounded-md p-2 text-white hover:bg-white/10 transition-colors"
+                className="md:hidden text-white hover:text-yellow-400 transition-colors"
               >
                 <FaBars size={22} />
               </button>
-              <Link href="/" className="text-2xl font-black tracking-tighter text-white shrink-0">
+              <Link
+                href="/"
+                className="text-xl md:text-2xl font-black tracking-tighter text-white uppercase shrink-0"
+              >
                 SMART<span className="text-yellow-400">FLOW</span>
               </Link>
             </div>
 
-            {/* DESKTOP SEARCH BAR (Only visible on md screens and up) */}
-            <div className="hidden md:flex flex-1 max-w-md mx-4">
-              <div className="relative w-full group">
-                <span className="absolute inset-y-0 left-3 flex items-center text-zinc-400 group-focus-within:text-yellow-400 transition-colors">
-                  <FaSearch size={14} />
+            {/* SEARCH  */}
+            <div className="hidden md:flex flex-1 max-w-lg group px-4">
+              <div className="relative w-full flex items-center bg-white/5 border border-white/20 group-focus-within:border-yellow-400 transition-all">
+                <span className="pl-4 text-blue-300">
+                  <FaSearch size={13} />
                 </span>
                 <input
                   type="text"
-                  placeholder="Search properties..."
-                  className="w-full rounded-lg bg-white/10 border border-white/20 py-2 pl-10 pr-4 text-sm text-white placeholder-zinc-400 outline-none focus:bg-white/20 focus:border-yellow-400 transition-all"
+                  placeholder="SEARCH ASSETS..."
+                  className="w-full bg-transparent py-3 px-4 text-[11px] font-black uppercase tracking-widest text-white placeholder-blue-300/40 outline-none"
                 />
               </div>
             </div>
 
-            {/* RIGHT ACTIONS */}
-            <div className="flex items-center gap-3 lg:gap-6">
-              <button className="relative flex items-center justify-center h-10 w-10 text-white hover:text-yellow-400 bg-white/5 hover:bg-white/10 rounded-full transition-all">
-                <FaBell />
-                <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-red-500 border-2 border-blue-900" />
+            {/* ACTIONS */}
+            <div className="flex items-center gap-3 md:gap-6">
+              <button className="relative text-white hover:text-yellow-400">
+                <FaBell size={19} />
+                <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-yellow-400 border border-blue-900" />
               </button>
 
-              <div className="h-8 w-[1px] bg-white/20 hidden sm:block" />
+              <div className="h-8 w-[1px] bg-white/10 hidden sm:block" />
 
-              <Link
-                href="/auth/login"
-                className="flex items-center gap-2 bg-yellow-400 px-5 py-2.5 rounded-full text-sm font-bold text-blue-900 hover:bg-yellow-300 transition-all active:scale-95"
-              >
-                <FaSignInAlt />
-                <span className="hidden sm:inline">Login</span>
-              </Link>
+              {isLoggedIn ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="flex items-center gap-3 group"
+                  >
+                    <div className="flex flex-col items-end hidden md:flex text-right">
+                      <span className="text-[9px] font-black text-yellow-400 uppercase tracking-widest leading-none mb-1 flex items-center gap-1">
+                        {user?.role === 'technician' && <FaShieldAlt size={8} />}
+                        {user?.role}
+                      </span>
+                      <div className="flex items-center gap-1 text-white text-[12px] font-black uppercase">
+                        {user?.name}{' '}
+                        <FaChevronDown
+                          size={8}
+                          className={`transition-transform ${profileOpen ? 'rotate-180' : ''}`}
+                        />
+                      </div>
+                    </div>
+                    <div className="h-10 w-10 md:h-11 md:w-11 bg-blue-800 border-2 border-yellow-400 flex items-center justify-center group-hover:bg-yellow-400 transition-all">
+                      <span className="text-white group-hover:text-blue-900 text-lg font-black">
+                        {user?.name?.charAt(0)}
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* DROPDOWN */}
+                  {profileOpen && (
+                    <div className="absolute right-0 mt-3 w-52 bg-white shadow-2xl border border-gray-100 py-1 flex flex-col">
+                      <Link
+                        href="/profile"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 text-[11px] font-black uppercase text-blue-950 hover:bg-gray-50"
+                      >
+                        <FaUserCircle className="text-blue-400" /> Dashboard
+                      </Link>
+                      <button
+                        onClick={onLogout}
+                        className="flex items-center gap-3 px-4 py-3 text-[11px] font-black uppercase text-red-600 hover:bg-red-50 border-t border-gray-50 transition-colors"
+                      >
+                        <FaSignOutAlt /> Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  href="/auth/login"
+                  className="flex items-center gap-2 bg-yellow-400 px-5 md:px-8 py-2 md:py-3 text-[11px] font-black uppercase tracking-widest text-blue-900 hover:bg-white transition-all"
+                >
+                  <FaSignInAlt size={13} /> <span className="hidden sm:inline">Login</span>
+                </Link>
+              )}
             </div>
           </div>
         </div>
 
-        {/* SECONDARY NAVIGATION (Desktop) */}
+        {/* BOTTOM NAV */}
         <nav className="hidden md:flex items-center justify-center gap-10 py-3 bg-white border-b border-gray-200">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className="group relative text-sm font-bold uppercase tracking-wide text-blue-950 hover:text-blue-600 transition-colors"
+              className="group relative text-[11px] font-black uppercase tracking-[0.15em] text-blue-950 hover:text-blue-600 transition-colors"
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-yellow-400 transition-all group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 h-[3px] w-0 bg-yellow-400 transition-all group-hover:w-full" />
             </Link>
           ))}
         </nav>
       </header>
 
-      {/* MOBILE SIDEBAR (Drawer) */}
+      {/* MOBILE DRAWER */}
       <aside
-        className={`fixed left-0 top-0 z-50 h-full w-80 transform bg-white shadow-2xl transition-transform duration-300 ease-in-out flex flex-col md:hidden
-        ${open ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed left-0 top-0 z-[70] h-full w-[85%] max-w-sm transform bg-white transition-transform duration-500 ease-in-out flex flex-col md:hidden shadow-2xl ${open ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5 bg-blue-950 text-white">
-          <span className="text-xl font-black tracking-tight">SMARTFLOW</span>
-          <button onClick={() => setOpen(false)} className="p-2 hover:bg-white/10 rounded-full">
-            <FaTimes size={20} />
+        <div className="flex items-center justify-between px-6 py-6 bg-blue-900 text-white">
+          <span className="text-xl font-black uppercase">
+            SMART<span className="text-yellow-400">FLOW</span>
+          </span>
+          <button onClick={() => setOpen(false)} className="text-yellow-400">
+            <FaTimes size={24} />
           </button>
         </div>
 
-        {/* MOBILE SEARCH (Inside Menu Only) */}
-        <div className="p-4 border-b border-gray-100">
-          <div className="relative flex items-center">
-            <FaSearch className="absolute left-3 text-gray-400" size={14} />
-            <input
-              type="text"
-              placeholder="Search properties..."
-              className="w-full bg-gray-100 border-none rounded-lg py-3 pl-10 pr-4 text-sm focus:ring-2 focus:ring-yellow-400 outline-none"
-            />
-          </div>
-        </div>
-
-        <nav className="flex flex-col gap-1 p-4 overflow-y-auto">
+        <nav className="flex flex-col flex-1 overflow-y-auto pt-2">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="flex items-center justify-between px-4 py-4 rounded-xl text-blue-950 hover:bg-blue-50 hover:text-blue-700 transition-all font-bold"
+              className="flex items-center justify-between px-8 py-4 border-b border-gray-50 text-blue-950 text-[11px] font-black uppercase tracking-widest"
             >
-              {link.name}
-              <FaChevronRight size={12} className="text-gray-300" />
+              {link.name} <FaChevronRight size={10} className="text-blue-100" />
             </Link>
           ))}
         </nav>
 
-        <div className="mt-auto border-t border-gray-100 p-6 bg-gray-50">
-          <Link href="/auth/login" className="flex items-center gap-3 text-blue-900 mb-8">
-            <FaUserCircle size={24} />
-            <span className="font-bold text-lg">My Account</span>
-          </Link>
-          <div className="flex gap-4 text-blue-900/40">
-            <FaFacebookF size={20} className="hover:text-blue-600" />
-            <FaTwitter size={20} className="hover:text-blue-600" />
-            <FaInstagram size={20} className="hover:text-blue-600" />
+        <div className="mt-auto border-t border-gray-100 p-8 bg-gray-50/80">
+          {isLoggedIn ? (
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 bg-blue-900 flex items-center justify-center font-black text-yellow-400 text-xl border-2 border-yellow-400">
+                  {user?.name?.charAt(0)}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-blue-950 font-black uppercase text-sm">{user?.name}</span>
+                  <span className="text-blue-400 text-[10px] font-bold uppercase tracking-widest">
+                    {user?.role}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={onLogout}
+                className="w-full bg-white border border-red-200 text-red-600 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all"
+              >
+                Logout System
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/auth/register"
+                className="w-full bg-blue-900 text-white py-3 text-center text-[10px] font-black uppercase tracking-widest"
+              >
+                Register Account
+              </Link>
+              <Link
+                href="/auth/login"
+                className="w-full border-2 border-blue-900 text-blue-900 py-3 text-center text-[10px] font-black uppercase tracking-widest"
+              >
+                Login Portal
+              </Link>
+            </div>
+          )}
+
+          {/* SOCIAL ICONS */}
+          <div className="flex justify-center gap-8 mt-10 text-blue-900/30">
+            <FaFacebookF className="hover:text-blue-600" />
+            <FaTwitter className="hover:text-blue-600" />
+            <FaInstagram className="hover:text-blue-600" />
+            <FaLinkedinIn className="hover:text-blue-600" />
           </div>
         </div>
       </aside>

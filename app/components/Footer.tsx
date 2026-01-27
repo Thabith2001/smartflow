@@ -27,8 +27,8 @@ export default function Footer() {
             </h3>
             <ul className="flex flex-col gap-3 text-sm text-zinc-600">
               {[
-                'About Us',
-                'Contact us',
+                'About',
+                'Contact',
                 'Careers',
                 'Testimonials',
                 'KYC',
