@@ -69,8 +69,8 @@ export default function HomePage() {
         <HeroBanner />
         <WhyChooseUs />
         <PropertyListings />
-        <FeaturedProperties />
         <PropertyGallery />
+        <FeaturedProperties />
       </main>
 
       {/* --- SCROLL TO TOP BUTTON --- */}
