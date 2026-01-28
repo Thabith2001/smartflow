@@ -46,6 +46,19 @@ export default function PropertyPage() {
     maximumFractionDigits: 0,
   }).format(house.price);
 
+  /* --- IMAGE NAVIGATION LOGIC --- */
+  const nextImage = () => {
+    const currentIndex = house.images.indexOf(activeImage);
+    const nextIndex = (currentIndex + 1) % house.images.length;
+    setActiveImage(house.images[nextIndex]);
+  };
+
+  const prevImage = () => {
+    const currentIndex = house.images.indexOf(activeImage);
+    const prevIndex = (currentIndex - 1 + house.images.length) % house.images.length;
+    setActiveImage(house.images[prevIndex]);
+  };
+
   return (
     <div className="flex flex-col min-h-screen font-sans selection:bg-[#FFB800] selection:text-white">
       <Header />
@@ -99,19 +112,30 @@ export default function PropertyPage() {
 
           {/* --- IMAGE GRID VIEW --- */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-10 h-[250px] sm:h-[350px] md:h-[550px]">
-            <div className="md:col-span-3 relative group overflow-hidden rounded-sm bg-zinc-100">
+            <div className="md:col-span-3 relative group overflow-hidden rounded-none bg-zinc-100">
               <img
                 src={activeImage}
                 className="w-full h-full object-cover transition-all duration-500"
                 alt="Main View"
               />
-              <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button className="bg-white/90 p-3 md:p-4 shadow-xl hover:bg-[#FFB800] hover:text-white transition-all transform">
-                  <FaChevronLeft className="text-[#1E3A8A]" />
+
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <button
+                  onClick={prevImage}
+                  className="bg-white p-3 md:p-4 shadow-2xl hover:bg-[#1E3A8A] hover:text-white transition-all transform active:scale-90"
+                >
+                  <FaChevronLeft size={20} />
                 </button>
-                <button className="bg-white/90 p-3 md:p-4 shadow-xl hover:bg-[#FFB800] hover:text-white transition-all transform">
-                  <FaChevronRight className="text-[#1E3A8A]" />
+                <button
+                  onClick={nextImage}
+                  className="bg-white p-3 md:p-4 shadow-2xl hover:bg-[#1E3A8A] hover:text-white transition-all transform active:scale-90"
+                >
+                  <FaChevronRight size={20} />
                 </button>
+              </div>
+
+              <div className="absolute bottom-4 right-4 bg-black/70 text-white text-[10px] font-black px-3 py-1 uppercase tracking-widest">
+                {house.images.indexOf(activeImage) + 1} / {house.images.length}
               </div>
             </div>
 
@@ -119,19 +143,22 @@ export default function PropertyPage() {
               {house.images.slice(0, 2).map((img, idx) => (
                 <div
                   key={idx}
-                  className="h-1/2 bg-zinc-100 overflow-hidden rounded-sm relative group cursor-pointer"
+                  className="h-1/2 bg-zinc-100 overflow-hidden rounded-none relative group cursor-pointer"
                   onClick={() => setActiveImage(img)}
                 >
                   <img
                     src={img}
-                    className={`w-full h-full object-cover transition-all ${idx === 1 ? 'brightness-50 group-hover:brightness-75' : 'brightness-90 hover:brightness-110'}`}
+                    className={`w-full h-full object-cover transition-all duration-500 
+            ${activeImage === img ? 'brightness-110 border-2 border-[#1E3A8A]' : 'brightness-75 hover:brightness-100'}`}
                     alt="Alt View"
                   />
-                  {idx === 1 && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white border-2 border-transparent group-hover:border-white/20 m-2 transition-all">
-                      <span className="font-black text-lg md:text-xl">+{house.images.length}</span>
-                      <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-tighter">
-                        View Gallery
+                  {idx === 1 && house.images.length > 2 && (
+                    <div className="absolute inset-0 bg-[#1E3A8A]/40 flex flex-col items-center justify-center text-white transition-all group-hover:bg-[#1E3A8A]/60">
+                      <span className="font-black text-xl md:text-2xl">
+                        +{house.images.length - 2}
+                      </span>
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em]">
+                        Gallery
                       </span>
                     </div>
                   )}
