@@ -19,7 +19,6 @@ interface DataTableProps {
 export default function DataTable({ columns, data, onEdit, onDelete, title }: DataTableProps) {
   const [query, setQuery] = useState('');
 
-  // Filter rows by query across all column values
   const filteredData = data.filter((row) =>
     Object.values(row).some((val) => String(val).toLowerCase().includes(query.toLowerCase()))
   );

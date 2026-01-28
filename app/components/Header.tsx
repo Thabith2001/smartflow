@@ -84,7 +84,7 @@ export default function Header({ user, isLoggedIn, onLogout }) {
                 <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-yellow-400 border border-blue-900" />
               </button>
 
-              <div className="h-8 w-[1px] bg-white/10 hidden sm:block" />
+              <div className="h-8 w-[1px] bg-white/40 hidden sm:block" />
 
               {isLoggedIn ? (
                 <div className="relative">

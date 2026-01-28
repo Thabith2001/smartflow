@@ -222,7 +222,7 @@ export default function PropertyPage() {
                   <div className="h-[2px] w-full bg-[#FFB800]"></div>
                 </div>
                 <div className="text-gray-600 leading-loose text-base md:text-lg font-medium whitespace-pre-line">
-                  {house.description}
+                  {house.longDescription}
                 </div>
               </section>
 
@@ -250,7 +250,7 @@ export default function PropertyPage() {
                 <div className="bg-white border-t-8 border-[#1E3A8A] p-6 md:p-8 shadow-xl space-y-6">
                   <div className="text-center space-y-1">
                     <h4 className="font-black text-[#1E3A8A] uppercase text-xs md:text-sm tracking-widest">
-                      Buy Property
+                      Rent Property
                     </h4>
                     <p className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-tight italic">
                       Verified USA Listing
@@ -259,7 +259,7 @@ export default function PropertyPage() {
                   <div className="space-y-3">
                     <button
                       onClick={() => setIsPurchaseOpen(true)}
-                      className="w-full bg-[#1E3A8A] hover:bg-green-600 text-white py-5 font-black uppercase text-[11px] tracking-widest transition-all duration-300 shadow-lg"
+                      className="w-full bg-[#1E3A8A] hover:bg-yellow-500 hover:text-[#1E3A8A] text-white py-5 font-black uppercase text-[11px] tracking-widest transition-all duration-300 shadow-lg"
                     >
                       Start Purchase
                     </button>

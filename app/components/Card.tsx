@@ -77,8 +77,8 @@ const Card = ({ house, onExpand }: CardProps) => {
             <span className="text-sm font-bold uppercase tracking-tight">{house.location}</span>
           </div>
 
-          <p className="text-zinc-500 text-sm leading-relaxed mb-6 line-clamp-2">
-            {house.description || 'Exclusive property featuring modern architecture.'}
+          <p className="text-zinc-500 text-sm leading-relaxed mb-3 line-clamp-2">
+            {house.shortDescription || 'Exclusive property featuring modern architecture.'}
           </p>
 
           <hr className="border-gray-100 mb-5 mt-auto" />

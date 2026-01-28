@@ -2,9 +2,10 @@ export interface Property {
   id: number;
   category: 'House' | 'Apartment' | 'Land';
   title: string;
-  description: string;
-  location: string;    // City, State
-  address: string;     // Full Street Address
+  shortDescription: string; // Brief summary for listings
+  longDescription: string;  // Detailed text for property page
+  location: string;
+  address: string;
   price: number;
   landSize: number;
   beds: number;
@@ -12,9 +13,9 @@ export interface Property {
   status: 'Sale' | 'Rent';
   date: string;
   isFeatured: boolean;
-  image: string;       // Primary Thumbnail
-  images: string[];    // Gallery of 3 images
-  features: string[];  // Property highlights
+  image: string;
+  images: string[];
+  features: string[];
 }
 
 export const portfolioData: Property[] = [
@@ -22,7 +23,8 @@ export const portfolioData: Property[] = [
     id: 1,
     category: 'House',
     title: 'Bel Air Mansion',
-    description: 'A massive architectural masterpiece with panoramic views of the city.',
+    shortDescription: 'A massive architectural masterpiece with panoramic views of the city.',
+    longDescription: 'Experience unparalleled luxury in this Bel Air masterpiece. This property features floor-to-ceiling glass walls that frame the Los Angeles basin. Built with the finest materials, it includes a professional-grade chef\'s kitchen, a sprawling master suite with a private terrace, and an automated smart-home system that controls everything from lighting to climate.',
     location: 'Los Angeles, CA',
     address: '1230 Bel Air Rd, Los Angeles, CA 90077',
     price: 12500000,
@@ -44,7 +46,8 @@ export const portfolioData: Property[] = [
     id: 2,
     category: 'Land',
     title: 'Vineyard Estate',
-    description: 'Prime agricultural land with rich soil in the heart of wine country.',
+    shortDescription: 'Prime agricultural land with rich soil in the heart of wine country.',
+    longDescription: 'This rare 45,000 sq ft plot in Napa Valley offers rich, volcanic soil perfect for premium viticulture. The land is fully cleared and includes established water rights with a high-capacity irrigation system already installed. Positioned on a gentle slope, it provides excellent drainage and stunning sunset views over the valley, making it an ideal spot for a private winery or a luxury rural estate.',
     location: 'Napa Valley, CA',
     address: '455 Silverado Trail, Napa, CA 94558',
     price: 4200000,
@@ -66,7 +69,8 @@ export const portfolioData: Property[] = [
     id: 3,
     category: 'Apartment',
     title: 'Penthouse 54',
-    description: 'Sky-high luxury living overlooking the Manhattan skyline.',
+    shortDescription: 'Sky-high luxury living overlooking the Manhattan skyline.',
+    longDescription: 'Located on the 54th floor of one of New York\'s most prestigious towers, this penthouse offers 360-degree views of Central Park and the Hudson River. The interior features white oak flooring, marble countertops, and custom cabinetry. Residents enjoy exclusive access to building amenities including a private wine cellar, a state-of-the-art fitness center, and a 24-hour white-glove concierge service.',
     location: 'New York, NY',
     address: '721 5th Ave, New York, NY 10022',
     price: 8900000,
@@ -88,7 +92,8 @@ export const portfolioData: Property[] = [
     id: 4,
     category: 'House',
     title: 'Modernist Glass Villa',
-    description: 'Minimalist design featuring open floor plans and smart tech.',
+    shortDescription: 'Minimalist design featuring open floor plans and smart tech.',
+    longDescription: 'This Austin villa is a study in modern minimalism. The home is built around a central courtyard, allowing natural light to penetrate every room. Featuring high-efficiency solar panels and a Tesla Powerwall, this is a truly sustainable luxury home. The open-plan living area flows seamlessly into the outdoor pool deck, creating the perfect environment for entertaining guests in the Texas heat.',
     location: 'Austin, TX',
     address: '4502 Scenic Dr, Austin, TX 78703',
     price: 3400000,
@@ -106,5 +111,4 @@ export const portfolioData: Property[] = [
     ],
     features: ['Solar Panels', 'Smart Home Hub', 'Modern Kitchen', 'CCTV Security']
   }
-  
 ];
