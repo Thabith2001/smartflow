@@ -27,10 +27,11 @@ import Link from 'next/link';
 export default function PropertyPage() {
   const params = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [isPurchaseOpen, setIsPurchaseOpen] = useState(false); // For Purchase Popup
+  const [isPurchaseOpen, setIsPurchaseOpen] = useState(false);
 
   const house = portfolioData.find((p) => p.id === Number(params.id));
+
+  const [activeImage, setActiveImage] = useState(house?.image || '');
 
   if (!house)
     return (
@@ -79,7 +80,8 @@ export default function PropertyPage() {
                 {house.title}
               </h1>
               <div className="flex items-center gap-2 text-gray-500 text-[10px] md:text-xs font-bold uppercase tracking-widest">
-                <FaMapMarkerAlt className="text-[#1E3A8A]" /> {house.location}
+                {/* --- ADDRESS --- */}
+                <FaMapMarkerAlt className="text-[#1E3A8A]" /> {house.address || house.location}
               </div>
             </div>
             <div className="md:text-right bg-gray-50 md:bg-transparent p-4 md:p-0 w-full md:w-auto rounded-sm border md:border-0 mt-2 md:mt-0">
@@ -99,8 +101,8 @@ export default function PropertyPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-10 h-[250px] sm:h-[350px] md:h-[550px]">
             <div className="md:col-span-3 relative group overflow-hidden rounded-sm bg-zinc-100">
               <img
-                src={house.image}
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                src={activeImage}
+                className="w-full h-full object-cover transition-all duration-500"
                 alt="Main View"
               />
               <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -112,27 +114,29 @@ export default function PropertyPage() {
                 </button>
               </div>
             </div>
+
             <div className="hidden md:flex flex-col gap-2 md:col-span-1">
-              <div className="h-1/2 bg-zinc-100 overflow-hidden rounded-sm">
-                <img
-                  src={house.image}
-                  className="w-full h-full object-cover brightness-90 hover:brightness-110 transition-all cursor-zoom-in"
-                  alt="Alt 1"
-                />
-              </div>
-              <div className="h-1/2 bg-zinc-100 overflow-hidden rounded-sm relative group cursor-pointer">
-                <img
-                  src={house.image}
-                  className="w-full h-full object-cover brightness-50 group-hover:brightness-75 transition-all"
-                  alt="Alt 2"
-                />
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white border-2 border-transparent group-hover:border-white/20 m-2 transition-all">
-                  <span className="font-black text-lg md:text-xl">+14</span>
-                  <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-tighter">
-                    View Gallery
-                  </span>
+              {house.images.slice(0, 2).map((img, idx) => (
+                <div
+                  key={idx}
+                  className="h-1/2 bg-zinc-100 overflow-hidden rounded-sm relative group cursor-pointer"
+                  onClick={() => setActiveImage(img)}
+                >
+                  <img
+                    src={img}
+                    className={`w-full h-full object-cover transition-all ${idx === 1 ? 'brightness-50 group-hover:brightness-75' : 'brightness-90 hover:brightness-110'}`}
+                    alt="Alt View"
+                  />
+                  {idx === 1 && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white border-2 border-transparent group-hover:border-white/20 m-2 transition-all">
+                      <span className="font-black text-lg md:text-xl">+{house.images.length}</span>
+                      <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-tighter">
+                        View Gallery
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -154,7 +158,7 @@ export default function PropertyPage() {
                 </p>
               </section>
 
-              {/* BUY / PAYMENT OPTIONS SECTION */}
+              {/* PAYMENT OPTIONS SECTION */}
               <section className="border-2 border-gray-100 p-6 md:p-10 rounded-sm bg-white">
                 <div className="flex items-center gap-4 mb-8">
                   <h3 className="text-xl md:text-2xl font-black text-[#1E3A8A] uppercase tracking-tighter">
@@ -222,20 +226,13 @@ export default function PropertyPage() {
                 </div>
               </section>
 
-              {/* FEATURES */}
+              {/* FEATURES  */}
               <section className="bg-[#1E3A8A] p-6 md:p-10 rounded-sm text-white">
                 <h3 className="text-lg md:text-xl font-black uppercase mb-6 md:mb-10 tracking-widest border-b border-white/10 pb-4">
                   Features & Amenities
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                  {[
-                    'CCTV Security',
-                    'HVAC System',
-                    'Modern Kitchen',
-                    'City Water',
-                    'Smart Home',
-                    'Garage',
-                  ].map((feat) => (
+                  {house.features.map((feat) => (
                     <div
                       key={feat}
                       className="flex items-center gap-3 text-[10px] md:text-xs font-black uppercase tracking-widest"
@@ -259,7 +256,6 @@ export default function PropertyPage() {
                       Verified USA Listing
                     </p>
                   </div>
-
                   <div className="space-y-3">
                     <button
                       onClick={() => setIsPurchaseOpen(true)}
@@ -274,13 +270,12 @@ export default function PropertyPage() {
                       <FaCalendarAlt /> Schedule Tour
                     </button>
                     <a
-                      href={`#`}
+                      href="#"
                       className="w-full border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white py-4 font-black uppercase text-[10px] tracking-widest transition-all flex items-center justify-center gap-3"
                     >
                       <FaWhatsapp size={18} /> WhatsApp
                     </a>
                   </div>
-
                   <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                     <p className="text-[9px] font-black text-gray-400 uppercase mb-2">
                       USA Support Hotline
@@ -290,7 +285,6 @@ export default function PropertyPage() {
                     </p>
                   </div>
                 </div>
-
                 <div className="bg-green-50 p-4 border border-green-100 text-[10px] md:text-[11px] text-green-800 leading-relaxed">
                   <p className="font-black uppercase mb-1 flex items-center gap-2">
                     <FaShieldAlt /> Secure Escrow
@@ -303,17 +297,12 @@ export default function PropertyPage() {
         </div>
       </main>
 
-      {/* ... other code above ... */}
       <Footer />
-
-      {/* Existing Modal */}
       <ViewingModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         propertyTitle={house.title}
       />
-
-      {/* MISSING TAG  */}
       <PurchaseModal
         isOpen={isPurchaseOpen}
         onClose={() => setIsPurchaseOpen(false)}
