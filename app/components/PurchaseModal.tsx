@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FaCreditCard,
   FaUniversity,
@@ -8,29 +8,65 @@ import {
   FaChevronRight,
   FaTimes,
   FaCheckCircle,
-  FaInfoCircle,
+  FaFileAlt,
+  FaSpinner,
 } from 'react-icons/fa';
 
 const PurchaseModal = ({ isOpen, onClose, house }) => {
-  const [step, setStep] = useState('selection');
+  const [step, setStep] = useState('details');
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setStep('details');
+      setSelectedFile(null);
+      setIsLoading(false);
+    }
+  }, [isOpen]);
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    setStep('selection');
+  };
+
+  const simulateSubmit = (nextStep) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setStep(nextStep);
+    }, 1500);
+  };
 
   if (!isOpen) return null;
 
   const handleClose = () => {
-    setStep('selection');
+    setStep('details');
     onClose();
   };
 
+  const stepIndex = { details: 0, selection: 1, stripe: 2, bank: 2, escrow: 2, success: 3 };
+  const currentProgress = (stepIndex[step] / 3) * 100;
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-all">
-      <div className="bg-white w-full max-w-lg rounded-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4 bg-black/70 backdrop-blur-sm transition-all">
+      <div className="bg-white w-full max-w-lg rounded-t-xl md:rounded-sm shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-10 md:zoom-in duration-300 max-h-[95vh] flex flex-col">
+        {/* PROGRESS BAR */}
+        <div className="h-1 bg-gray-100 w-full shrink-0">
+          <div
+            className="h-full bg-[#FFB800] transition-all duration-500"
+            style={{ width: `${currentProgress}%` }}
+          />
+        </div>
+
         {/* HEADER */}
-        <div className="bg-[#1E3A8A] p-6 text-white flex justify-between items-center">
+        <div className="bg-[#1E3A8A] p-5 md:p-6 text-white flex justify-between items-center shrink-0">
           <div>
-            <h3 className="font-black uppercase tracking-widest text-lg">
-              {step === 'selection' ? 'Initialize Purchase' : 'Payment Details'}
+            <h3 className="font-black uppercase tracking-widest text-sm md:text-lg">
+              {step === 'success' ? 'Confirmed' : step === 'details' ? 'Registration' : 'Payment'}
             </h3>
-            <p className="text-[10px] opacity-70 uppercase font-bold truncate max-w-[250px]">
+            <p className="text-[9px] md:text-[10px] opacity-70 uppercase font-bold truncate max-w-[200px] md:max-w-[250px]">
               {house.title}
             </p>
           </div>
@@ -38,56 +74,120 @@ const PurchaseModal = ({ isOpen, onClose, house }) => {
             onClick={handleClose}
             className="text-white hover:text-[#FFB800] transition-colors p-2"
           >
-            <FaTimes size={20} />
+            <FaTimes size={18} />
           </button>
         </div>
 
-        <div className="p-8">
+        {/* SCROLLABLE BODY */}
+        <div className="p-5 md:p-8 overflow-y-auto custom-scrollbar">
+          {step === 'details' && (
+            <form
+              onSubmit={handleNext}
+              className="space-y-5 md:space-y-6 animate-in fade-in duration-500"
+            >
+              <div className="border-b-2 border-gray-100 pb-3">
+                <h3 className="text-lg md:text-xl font-black text-[#1E3A8A] uppercase tracking-tighter">
+                  Buyer Registration
+                </h3>
+                <p className="text-[9px] md:text-[10px] text-gray-400 font-bold uppercase mt-1">
+                  Legal info for contract
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <InputField
+                  label="Full Legal Name"
+                  placeholder="e.g. JOHN DOE"
+                  required
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputField
+                    label="Email Address"
+                    type="email"
+                    placeholder="JD@EXAMPLE.COM"
+                    required
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                  <InputField
+                    label="Phone Number"
+                    type="tel"
+                    placeholder="+1 (000) 000-0000"
+                    required
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="bg-[#1E3A8A] p-4 text-white flex justify-between items-center rounded-sm">
+                <div>
+                  <p className="text-[7px] md:text-[8px] font-bold uppercase opacity-70">
+                    Investment
+                  </p>
+                  <p className="text-base md:text-lg font-black">${house.price.toLocaleString()}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[7px] md:text-[8px] font-bold uppercase opacity-70">ID</p>
+                  <p className="text-xs font-black">#PRO-{house.id}</p>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#FFB800] active:scale-[0.98] hover:bg-black text-white py-4 md:py-5 font-black uppercase text-[10px] md:text-[11px] tracking-[0.2em] transition-all shadow-lg flex items-center justify-center gap-2 group"
+              >
+                Continue{' '}
+                <FaChevronRight className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </form>
+          )}
+
           {/* SELECTION */}
           {step === 'selection' && (
             <div className="animate-in fade-in duration-300">
-              <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-6 border-b border-gray-100 pb-3">
-                Select Your Preferred Payment Method
+              <p className="text-gray-500 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mb-5 border-b border-gray-100 pb-3 text-center md:text-left">
+                Select Payment Method
               </p>
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 gap-3 md:gap-4">
                 <PaymentOption
                   icon={<FaCreditCard />}
-                  title="Secure Card Payment"
-                  subtitle="Stripe Checkout - Visa, Master"
+                  title="Card Payment"
+                  subtitle="Stripe Checkout"
                   onClick={() => setStep('stripe')}
                 />
                 <PaymentOption
                   icon={<FaUniversity />}
-                  title="Bank Wire Transfer"
-                  subtitle="Direct Swift/IBAN Transfer"
+                  title="Bank Wire"
+                  subtitle="Direct Transfer"
                   onClick={() => setStep('bank')}
                 />
                 <PaymentOption
                   icon={<FaShieldAlt />}
-                  title="Escrow Protection"
-                  subtitle="Secure Third-Party Holding"
+                  title="Escrow"
+                  subtitle="Third-Party Holding"
                   onClick={() => setStep('escrow')}
                 />
               </div>
             </div>
           )}
 
-          {/*  STRIPE OPTION */}
+          {/* STRIPE OPTION */}
           {step === 'stripe' && (
-            <div className="text-center py-4 space-y-6 animate-in slide-in-from-right-4 duration-300">
+            <div className="text-center py-2 space-y-6 animate-in slide-in-from-right-4 duration-300">
               <div className="bg-blue-50 p-6 border border-blue-100">
-                <FaCreditCard className="mx-auto text-4xl text-[#1E3A8A] mb-4" />
-                <h4 className="font-black uppercase text-sm">Pay with Stripe</h4>
-                <p className="text-xs text-gray-500 mt-2">
-                  You will be redirected to Stripe's secure checkout to complete your $
-                  {house.price.toLocaleString()} payment.
+                <FaCreditCard className="mx-auto text-3xl md:text-4xl text-[#1E3A8A] mb-4" />
+                <h4 className="font-black uppercase text-xs md:text-sm">Pay with Stripe</h4>
+                <p className="text-[10px] md:text-xs text-gray-500 mt-2 leading-relaxed">
+                  Secure checkout for ${house.price.toLocaleString()}.
                 </p>
               </div>
               <button
-                onClick={() => setStep('success')}
-                className="w-full bg-[#1E3A8A] text-white py-4 font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all"
+                onClick={() => simulateSubmit('success')}
+                disabled={isLoading}
+                className="w-full bg-[#1E3A8A] text-white py-4 font-black uppercase text-[10px] tracking-widest flex justify-center items-center gap-2"
               >
-                Proceed to Checkout
+                {isLoading ? <FaSpinner className="animate-spin" /> : 'Proceed to Checkout'}
               </button>
             </div>
           )}
@@ -95,162 +195,167 @@ const PurchaseModal = ({ isOpen, onClose, house }) => {
           {/* BANK OPTION */}
           {step === 'bank' && (
             <div className="space-y-4 animate-in slide-in-from-right-4 duration-300">
-              <div className="bg-gray-50 p-6 border-2 border-dashed border-gray-200 text-[11px] font-mono space-y-2 relative">
-                <div className="absolute top-2 right-2 bg-[#1E3A8A] text-white px-2 py-0.5 font-sans text-[8px] font-black uppercase">
-                  Transfer details
+              <div className="bg-gray-50 p-4 md:p-6 border-2 border-dashed border-gray-200 text-[10px] md:text-[11px] font-mono space-y-2 relative">
+                <div className="absolute top-2 right-2 bg-[#1E3A8A] text-white px-2 py-0.5 font-sans text-[7px] font-black uppercase">
+                  USA Direct Transfer
                 </div>
-                <p className="font-black text-gray-400 uppercase font-sans mb-2 tracking-widest">
-                  Official Bank Info:
-                </p>
-                <div className="space-y-1 text-gray-700">
+                <div className="space-y-1.5 text-gray-700">
                   <p>
-                    <span className="text-gray-400">BANK:</span> US FEDERAL TRUST
+                    <span className="text-gray-400 uppercase font-sans mr-2">Beneficiary:</span>{' '}
+                    SMARTFLOW PVT. LTD
                   </p>
-                  <div className="flex justify-between items-center group">
+                  <p>
+                    <span className="text-gray-400 uppercase font-sans mr-2">Bank Name:</span> US
+                    FEDERAL TRUST
+                  </p>
+
+                  <div className="flex items-center justify-between">
                     <p>
-                      <span className="text-gray-400">IBAN:</span> US76 1234 5678 9012
+                      <span className="text-gray-400 uppercase font-sans mr-2">Routing (ABA):</span>{' '}
+                      123456789
                     </p>
                     <button
-                      onClick={() => {
-                        navigator.clipboard.writeText('US76 1234 5678 9012');
-                        alert('IBAN copied to clipboard!');
-                      }}
-                      className="text-[9px] bg-gray-200 px-2 py-1 font-sans font-bold uppercase hover:bg-[#1E3A8A] hover:text-white transition-colors"
+                      onClick={() => navigator.clipboard.writeText('123456789')}
+                      className="text-[7px] bg-gray-200 px-1.5 py-0.5 uppercase font-bold"
                     >
                       Copy
                     </button>
                   </div>
-                  <p>
-                    <span className="text-gray-400">REF:</span> #PRO-{house.id}
+
+                  {/* Account Number */}
+                  <div className="flex items-center justify-between">
+                    <p>
+                      <span className="text-gray-400 uppercase font-sans mr-2">Account #:</span>{' '}
+                      9876543210
+                    </p>
+                    <button
+                      onClick={() => navigator.clipboard.writeText('9876543210')}
+                      className="text-[7px] bg-gray-200 px-1.5 py-0.5 uppercase font-bold"
+                    >
+                      Copy
+                    </button>
+                  </div>
+
+                  <p className="bg-blue-50 py-1 px-2 border-l-2 border-[#1E3A8A] mt-2">
+                    <span className="text-gray-400 uppercase font-sans mr-2">Ref:</span>
+                    <span className="font-black text-[#1E3A8A]">
+                      #PRO-{house.id}-
+                      {formData.name ? formData.name.split(' ')[0].toUpperCase() : 'PURCHASE'}
+                    </span>
                   </p>
                 </div>
               </div>
 
-              {/* UPLOAD SECTION */}
-              <div className="border-2 border-gray-100 p-5 rounded-sm bg-blue-50/30">
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-[10px] font-black text-[#1E3A8A] uppercase tracking-widest">
-                    Upload Payment Receipt
-                  </label>
-                  <span className="text-[8px] text-gray-400 font-bold uppercase">
-                    PDF, JPG, or PNG
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-sm cursor-pointer bg-white hover:bg-gray-50 transition-all">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg
-                        className="w-8 h-8 mb-3 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        ></path>
-                      </svg>
-                      <p className="mb-2 text-[10px] text-gray-500 font-bold uppercase">
-                        Click to upload invoice
+              {/* UPLOAD BOX */}
+              <div
+                className={`border-2 p-4 rounded-sm transition-all ${selectedFile ? 'border-green-500 bg-green-50' : 'border-gray-100 bg-blue-50/30'}`}
+              >
+                <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-300 border-dashed rounded-sm cursor-pointer bg-white">
+                  <div className="text-center">
+                    {selectedFile ? (
+                      <p className="text-[9px] font-bold text-green-600 truncate max-w-[180px]">
+                        ✓ {selectedFile.name}
                       </p>
-                    </div>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept=".pdf,image/*"
-                      onChange={(e) => {
-                        if (e.target.files[0]) {
-                          alert(`Selected: ${e.target.files[0].name}`);
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
+                    ) : (
+                      <p className="text-[9px] text-gray-500 font-black uppercase italic">
+                        Upload Wire Receipt
+                      </p>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                  />
+                </label>
               </div>
 
-              {/* ACTION BUTTONS */}
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              {/* ACTIONS */}
+              <div className="grid grid-cols-1 gap-2 pt-2">
+                <button
+                  onClick={() => simulateSubmit('success')}
+                  disabled={!selectedFile || isLoading}
+                  className="bg-[#1E3A8A] text-white py-4 font-black uppercase text-[10px] tracking-widest disabled:opacity-50 flex justify-center items-center gap-2"
+                >
+                  {isLoading ? <FaSpinner className="animate-spin" /> : 'Confirm Transfer'}
+                </button>
+
                 <button
                   onClick={() => {
+                    const refCode = `#PRO-${house.id}-${formData.name ? formData.name.split(' ')[0].toUpperCase() : 'PURCHASE'}`;
+                    const bankInfo = `
+SMARTFLOW PVT. LTD - USA WIRE INSTRUCTIONS
+-----------------------------------------
+Property: ${house.title}
+Amount: $${house.price.toLocaleString()}
+REQUIRED REFERENCE: ${refCode}
+
+BANK DETAILS:
+Bank: US FEDERAL TRUST
+Routing (ABA): 123456789
+Account #: 9876543210
+Type: Business Checking
+          `;
                     const element = document.createElement('a');
-                    const file = new Blob(
-                      [
-                        `INVOICE DETAILS\nProperty: ${house.title}\nIBAN: US76 1234 5678 9012\nREF: #PRO-${house.id}`,
-                      ],
-                      { type: 'text/plain' }
-                    );
+                    const file = new Blob([bankInfo], { type: 'text/plain' });
                     element.href = URL.createObjectURL(file);
-                    element.download = `Invoice_Info_${house.id}.txt`;
+                    element.download = `Smartflow_Wire_Details.txt`;
                     element.click();
                   }}
-                  className="bg-white text-gray-700 py-4 font-black uppercase text-[10px] tracking-widest border-2 border-gray-100 hover:bg-gray-50 transition-all"
+                  className="bg-white text-gray-700 py-3 font-black uppercase text-[9px] border-2 border-gray-100"
                 >
-                  Download Info
-                </button>
-
-                <button
-                  onClick={() => setStep('success')}
-                  className="bg-[#1E3A8A] text-white py-4 font-black uppercase text-[10px] tracking-widest hover:bg-green-600 transition-all shadow-xl"
-                >
-                  Submit Receipt
+                  Download Wire Info
                 </button>
               </div>
-
-              <p className="text-[8px] text-center text-gray-400 font-bold uppercase italic leading-tight">
-                * A payment confirmation email will be sent to you <br /> once the receipt is
-                verified.
-              </p>
             </div>
           )}
 
           {/* ESCROW OPTION */}
           {step === 'escrow' && (
             <div className="space-y-4 animate-in slide-in-from-right-4 duration-300">
-              <div className="flex gap-4 bg-green-50 p-4 border border-green-100">
-                <FaShieldAlt className="text-green-600 text-2xl shrink-0" />
-                <p className="text-[11px] text-green-800 font-medium">
-                  Escrow ensures your funds are only released to the seller once the title deed is
-                  verified.
+              <div className="flex gap-3 bg-green-50 p-4 border border-green-100">
+                <FaShieldAlt className="text-green-600 text-xl md:text-2xl shrink-0" />
+                <p className="text-[10px] md:text-[11px] text-green-800 font-medium leading-relaxed">
+                  Funds released to seller only after title deed verification.
                 </p>
               </div>
               <button
-                onClick={() => setStep('success')}
-                className="w-full bg-green-600 text-white py-4 font-black uppercase text-[10px] tracking-widest"
+                onClick={() => simulateSubmit('success')}
+                disabled={isLoading}
+                className="w-full bg-green-600 text-white py-4 font-black uppercase text-[10px] tracking-widest flex justify-center items-center gap-2"
               >
-                Start Escrow Process
+                {isLoading ? <FaSpinner className="animate-spin" /> : 'Start Escrow'}
               </button>
             </div>
           )}
 
           {/* SUCCESS VIEW */}
           {step === 'success' && (
-            <div className="py-10 text-center space-y-4 animate-in zoom-in duration-500">
-              <FaCheckCircle className="mx-auto text-green-500 text-6xl" />
-              <h4 className="text-xl font-black uppercase text-gray-900">Request Received!</h4>
-              <p className="text-gray-500 text-sm font-medium">
-                Our agents are preparing your contract for{' '}
+            <div className="py-6 md:py-10 text-center space-y-4 animate-in zoom-in duration-500">
+              <FaCheckCircle className="mx-auto text-green-500 text-5xl md:text-6xl" />
+              <h4 className="text-lg md:text-xl font-black uppercase text-gray-900">
+                Request Received!
+              </h4>
+              <p className="text-gray-500 text-xs md:text-sm font-medium px-2">
+                Contract preparation started for{' '}
                 <span className="text-[#1E3A8A] font-bold">{house.title}</span>.
               </p>
               <button
                 onClick={handleClose}
-                className="mt-6 px-10 py-3 bg-[#1E3A8A] text-white font-black uppercase text-[10px] tracking-widest"
+                className="mt-4 px-10 py-3 bg-[#1E3A8A] text-white font-black uppercase text-[9px] md:text-[10px] tracking-widest"
               >
-                Back to Property
+                Back
               </button>
             </div>
           )}
 
-          {/* BACK BUTTON  */}
-          {step !== 'selection' && step !== 'success' && (
+          {/* BACK BUTTON */}
+          {step !== 'details' && step !== 'success' && !isLoading && (
             <button
               onClick={() => setStep('selection')}
-              className="mt-4 text-[9px] font-black uppercase text-gray-400 hover:text-[#1E3A8A] flex items-center gap-1 mx-auto"
+              className="mt-6 text-[8px] font-black uppercase text-gray-400 hover:text-[#1E3A8A] flex items-center gap-1 mx-auto"
             >
-              ← Change Payment Method
+              ← Change Method
             </button>
           )}
         </div>
@@ -259,20 +364,34 @@ const PurchaseModal = ({ isOpen, onClose, house }) => {
   );
 };
 
+const InputField = ({ label, ...props }) => (
+  <div className="space-y-1">
+    <label className="text-[8px] md:text-[9px] font-black uppercase text-gray-500 tracking-widest">
+      {label}
+    </label>
+    <input
+      {...props}
+      className="w-full border-2 border-gray-100 p-3 md:p-4 text-[11px] md:text-xs font-bold uppercase focus:border-[#1E3A8A] outline-none transition-all bg-gray-50/50 rounded-sm"
+    />
+  </div>
+);
+
 const PaymentOption = ({ icon, title, subtitle, onClick }) => (
   <button
     onClick={onClick}
-    className="flex items-center justify-between p-5 border-2 border-gray-50 hover:border-[#1E3A8A] hover:bg-blue-50/30 transition-all group text-left"
+    className="flex items-center justify-between p-4 md:p-5 border-2 border-gray-50 hover:border-[#1E3A8A] active:bg-blue-50 transition-all group text-left rounded-sm w-full"
   >
-    <div className="flex items-center gap-4">
-      <div className="bg-gray-100 p-3 rounded-full text-[#1E3A8A] group-hover:bg-[#1E3A8A] group-hover:text-white transition-colors">
-        {React.cloneElement(icon, { size: 18 })}
+    <div className="flex items-center gap-3 md:gap-4">
+      <div className="bg-gray-100 p-2 md:p-3 rounded-full text-[#1E3A8A] group-hover:bg-[#1E3A8A] group-hover:text-white transition-colors">
+        {React.cloneElement(icon, { size: 16 })}
       </div>
       <div>
-        <span className="block font-black uppercase text-[11px] tracking-tight text-gray-900">
+        <span className="block font-black uppercase text-[10px] md:text-[11px] tracking-tight text-gray-900">
           {title}
         </span>
-        <span className="block text-[9px] text-gray-400 font-bold uppercase">{subtitle}</span>
+        <span className="block text-[8px] md:text-[9px] text-gray-400 font-bold uppercase">
+          {subtitle}
+        </span>
       </div>
     </div>
     <FaChevronRight className="text-gray-300 group-hover:text-[#1E3A8A] transition-transform group-hover:translate-x-1" />
