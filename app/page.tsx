@@ -49,7 +49,8 @@ export default function HomePage() {
       <Header />
 
       {/* --- ELITE SOCIAL SIDEBAR --- */}
-      <div className="fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex flex-col shadow-2xl">
+
+      <div className="hidden lg:flex fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex-col shadow-2xl">
         {socialLinks.map((social, index) => (
           <a
             key={index}
@@ -57,7 +58,6 @@ export default function HomePage() {
             className={`w-12 h-12 flex items-center justify-center bg-blue-900 text-white border-b border-white/10 transition-all duration-300 group relative overflow-hidden hover:w-36 ${social.color}`}
           >
             <div className="text-lg z-10 w-12 flex justify-center shrink-0">{social.icon}</div>
-
             <span className="absolute left-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-black uppercase text-[10px] tracking-tighter whitespace-nowrap pr-4">
               {social.label}
             </span>
@@ -74,13 +74,14 @@ export default function HomePage() {
       </main>
 
       {/* --- SCROLL TO TOP BUTTON --- */}
+
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-[99] p-4 bg-blue-900 text-[#FFB800] rounded-sm shadow-2xl border border-gray-400 transition-all duration-500 transform hover:bg-[#FFB800] hover:text-[#0A1D37] ${
+        className={`fixed bottom-6 right-6 lg:bottom-8 lg:right-8 z-[99] p-3 lg:p-4 bg-blue-900 text-[#FFB800] rounded-sm shadow-2xl border border-gray-400 transition-all duration-500 transform hover:bg-[#FFB800] hover:text-[#0A1D37] ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
         }`}
       >
-        <FaChevronUp size={20} />
+        <FaChevronUp size={18} className="lg:size-[20px]" />
       </button>
 
       <Footer />

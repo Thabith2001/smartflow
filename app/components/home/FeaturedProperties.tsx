@@ -33,19 +33,13 @@ const FeaturedProperties = () => {
         {/* COMPACT HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-10 border-b border-gray-100 pb-8">
           <div>
-            <span className="text-[#FFB800] text-xs font-black uppercase tracking-[0.3em]">
+            <span className="text-[#FFB800] text-xs md:text-sm font-black uppercase tracking-[0.3em]">
               Curated Selection
             </span>
-            <h2 className="text-5xl md:text-5xl font-black text-blue-900 uppercase tracking-tighter">
+            <h2 className="text-4xl md:text-5xl font-black text-blue-900 uppercase tracking-tighter">
               Featured <span className="text-gray-300">Properties</span>
             </h2>
           </div>
-          <Link href="/portfolio">
-            <button className="hidden md:flex items-center gap-3 bg-blue-900 text-white px-8 py-4 font-bold text-xs uppercase tracking-widest hover:bg-[#FFB800] hover:text-blue-900 transition-all group">
-              View All Properties{' '}
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </Link>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8 items-stretch">

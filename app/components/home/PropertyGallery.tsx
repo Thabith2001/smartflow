@@ -37,18 +37,17 @@ const PropertyGallery = () => {
         {/* --- HEADER AREA --- */}
         <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-[#FFB800] text-sm font-black uppercase tracking-[0.4em] mb-3">
+            <h2 className="text-[#FFB800] text-xs md:text-sm font-black uppercase tracking-[0.4em] mb-3">
               Property Media
             </h2>
-            <h3 className="text-5xl md:text-5xl font-black text-[#1E3A8A] uppercase">
+            <h3 className="text-4xl md:text-5xl font-black text-[#1E3A8A] uppercase">
               Visual <span className="text-gray-400">Gallery.</span>
             </h3>
           </div>
 
-          <Link href="/portfolio">
-            <button className="flex items-center gap-3 bg-[#1E3A8A] text-white px-8 py-4 font-bold text-xs uppercase tracking-widest hover:bg-[#FFB800] hover:text-[#0A1D37] transition-all group">
-              View All Media{' '}
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          <Link href="/portfolio" className="inline-block w-full md:w-auto">
+            <button className="w-full md:w-auto flex items-center justify-center gap-4 bg-[#1E3A8A] text-white px-8 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-[#FFB800] hover:text-[#0A1D37] transition-all">
+              View Portfolio <ArrowRight size={14} />
             </button>
           </Link>
         </div>

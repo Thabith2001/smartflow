@@ -44,17 +44,16 @@ const PropertyListings = () => {
         {/* --- SECTION HEADER --- */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <div className="max-w-xl">
-            <h2 className="text-[#FFB800] text-sm font-black uppercase tracking-[0.4em] mb-4">
+            <h2 className="text-[#FFB800] text-xs md:text-sm font-black uppercase tracking-[0.4em] mb-4">
               Our Portfolio
             </h2>
-            <h3 className="text-5xl md:text-5xl font-black text-blue-900 uppercase">
+            <h3 className="text-4xl md:text-5xl font-black text-blue-900 uppercase">
               Latest <span className="text-gray-400">Additions.</span>
             </h3>
           </div>
-          <Link href="/portfolio">
-            <button className="hidden md:flex items-center gap-3 bg-blue-900 text-white px-8 py-4 font-bold text-xs uppercase tracking-widest hover:bg-[#FFB800] hover:text-blue-900 transition-all group">
-              View All Properties{' '}
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          <Link href="/portfolio" className="inline-block w-full md:w-auto">
+            <button className="w-full md:w-auto flex items-center justify-center gap-4 bg-[#1E3A8A] text-white px-8 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-[#FFB800] hover:text-[#0A1D37] transition-all">
+              View Portfolio <ArrowRight size={14} />
             </button>
           </Link>
         </div>
@@ -64,14 +63,6 @@ const PropertyListings = () => {
             <Card key={property.id} house={property} onExpand={(img) => setSelectedImg(img)} />
           ))}
         </div>
-
-        <Link href="/portfolio">
-          <div className="mt-12 md:hidden">
-            <button className="w-full flex items-center justify-center gap-3 bg-blue-900 text-white px-8 py-5 font-bold text-xs uppercase tracking-widest">
-              View All Properties <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        </Link>
       </div>
     </section>
   );
