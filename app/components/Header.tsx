@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import SearchBar from './SearchBar';
 import {
   FaBell,
   FaSignInAlt,
@@ -64,18 +65,7 @@ export default function Header({ user, isLoggedIn, onLogout }) {
             </div>
 
             {/* SEARCH  */}
-            <div className="hidden md:flex flex-1 max-w-lg group px-4">
-              <div className="relative w-full flex items-center bg-white/5 border border-white/20 group-focus-within:border-yellow-400 transition-all">
-                <span className="pl-4 text-blue-300">
-                  <FaSearch size={13} />
-                </span>
-                <input
-                  type="text"
-                  placeholder="SEARCH ASSETS..."
-                  className="w-full bg-transparent py-3 px-4 text-[11px] font-black uppercase tracking-widest text-white placeholder-blue-300/40 outline-none"
-                />
-              </div>
-            </div>
+            <SearchBar />
 
             {/* ACTIONS */}
             <div className="flex items-center gap-3 md:gap-6">

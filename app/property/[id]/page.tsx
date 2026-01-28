@@ -244,7 +244,7 @@ export default function PropertyPage() {
               <section className="border border-gray-200 bg-white rounded-none">
                 <div className="px-5 py-3 border-b border-gray-200 bg-gray-50/50 flex justify-between items-center">
                   <h3 className="text-[11px] font-black text-[#1E3A8A] uppercase tracking-[0.2em]">
-                    Purchase Options
+                    Rent Options
                   </h3>
                   <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
                     Secure Checkout
@@ -259,7 +259,7 @@ export default function PropertyPage() {
                   ].map((option, i) => (
                     <div
                       key={i}
-                      className="group flex items-center justify-center gap-3 py-4 px-2 hover:bg-[#1E3A8A] transition-colors cursor-pointer"
+                      className="group flex items-center justify-center gap-3 py-4 px-2 hover:bg-[#1E3A8A] transition-colors "
                     >
                       <div className="text-sm text-[#1E3A8A] group-hover:text-[#eab308] transition-colors">
                         {option.icon}
