@@ -2,8 +2,8 @@ export interface Property {
   id: number;
   category: 'House' | 'Apartment' | 'Land';
   title: string;
-  shortDescription: string; // Brief summary for listings
-  longDescription: string;  // Detailed text for property page
+  shortDescription: string; 
+  longDescription: string;  
   location: string;
   address: string;
   price: number;
@@ -18,13 +18,14 @@ export interface Property {
   features: string[];
 }
 
+
 export const portfolioData: Property[] = [
   {
     id: 1,
     category: 'House',
     title: 'Bel Air Mansion',
     shortDescription: 'A massive architectural masterpiece with panoramic views of the city.',
-    longDescription: 'Experience unparalleled luxury in this Bel Air masterpiece. This property features floor-to-ceiling glass walls that frame the Los Angeles basin. Built with the finest materials, it includes a professional-grade chef\'s kitchen, a sprawling master suite with a private terrace, and an automated smart-home system that controls everything from lighting to climate.',
+    longDescription: `Luxurious 6-Bedroom Architectural Masterpiece in Bel Air, Los Angeles\n\nDiscover the pinnacle of California living in this sprawling hillside estate!\n\nKey Features:\n- Prime Location: Situated in the prestigious Bel Air enclave\n- Panaromic Views: 270-degree views of the LA skyline and Pacific Ocean\n- Massive Space: 8,500 Sq.Ft of ultra-luxury living area\n- 6 Bedrooms: Each featuring en-suite designer bathrooms\n- 8 Bathrooms: Including a spa-inspired master retreat\n- Chef's Kitchen: Professional-grade Wolf and Sub-Zero appliances\n- Smart Home: Fully automated Crestron system for security and climate\n\nCommon Facilities:\n- Infinity Pool & Spa: Overlooking the city lights\n- Home Theater: 12-seat private cinema with 4K projection\n- 24-Hr Gated Security: Absolute privacy and peace of mind\n- 5-Car Gallery: Temperature-controlled showroom parking\n\nSchedule a private viewing today to experience this masterpiece!`,
     location: 'Los Angeles, CA',
     address: '1230 Bel Air Rd, Los Angeles, CA 90077',
     price: 12500000,
@@ -47,7 +48,7 @@ export const portfolioData: Property[] = [
     category: 'Land',
     title: 'Vineyard Estate',
     shortDescription: 'Prime agricultural land with rich soil in the heart of wine country.',
-    longDescription: 'This rare 45,000 sq ft plot in Napa Valley offers rich, volcanic soil perfect for premium viticulture. The land is fully cleared and includes established water rights with a high-capacity irrigation system already installed. Positioned on a gentle slope, it provides excellent drainage and stunning sunset views over the valley, making it an ideal spot for a private winery or a luxury rural estate.',
+    longDescription: `Prime 45,000 Sq.Ft Vineyard Land for Sale in Napa Valley\n\nSecure your place in the heart of California’s world-renowned wine country!\n\nKey Features:\n- Agricultural Gold: Rich volcanic soil ideal for premium viticulture\n- Massive Acreage: 45,000 Sq.Ft of cleared, usable land\n- Water Rights: High-capacity well and irrigation system installed\n- Development Potential: Approved for a private winery or luxury manor\n- Scenic Vistas: Uninterrupted views of the Silverado Trail hills\n\nInfrastructure Details:\n- Perimeter Security: Full perimeter fencing with private gate access\n- Utilities: Electricity and water connections ready at the boundary\n- Storage: Includes a 1,200 Sq.Ft rustic storage barn\n\nDon't miss this rare opportunity for prime vineyard ownership. Call for a site visit today.`,
     location: 'Napa Valley, CA',
     address: '455 Silverado Trail, Napa, CA 94558',
     price: 4200000,
@@ -70,7 +71,7 @@ export const portfolioData: Property[] = [
     category: 'Apartment',
     title: 'Penthouse 54',
     shortDescription: 'Sky-high luxury living overlooking the Manhattan skyline.',
-    longDescription: 'Located on the 54th floor of one of New York\'s most prestigious towers, this penthouse offers 360-degree views of Central Park and the Hudson River. The interior features white oak flooring, marble countertops, and custom cabinetry. Residents enjoy exclusive access to building amenities including a private wine cellar, a state-of-the-art fitness center, and a 24-hour white-glove concierge service.',
+    longDescription: `Exclusive 3-Bedroom Penthouse for Rent at Manhattan Sky Tower\n\nElevate your lifestyle in this 54th-floor residential masterpiece!\n\nKey Features:\n- Iconic Location: Situated in the heart of New York City (5th Ave)\n- Sky-High Living: Panoramic 360-degree skyline views\n- Spacious Layout: 2,400 Sq.Ft of modern open-concept space\n- 3 Bedrooms: Featuring floor-to-ceiling soundproof windows\n- 4 Bathrooms: Finished in Italian Carrara marble\n- Gourmet Kitchen: Sub-Zero fridge and custom oak cabinetry\n\nCommon Facilities:\n- Rooftop Garden: Private outdoor space for residents\n- 24/7 White-Glove Concierge: Dedicated service and security\n- Fitness Center: State-of-the-art gym and private yoga studio\n- Wine Cellar: Secure temperature-controlled storage\n- Private Elevator: Secure, high-speed access to the 54th floor\n\nLive above the world. Schedule your private tour today.`,
     location: 'New York, NY',
     address: '721 5th Ave, New York, NY 10022',
     price: 8900000,
@@ -93,7 +94,7 @@ export const portfolioData: Property[] = [
     category: 'House',
     title: 'Modernist Glass Villa',
     shortDescription: 'Minimalist design featuring open floor plans and smart tech.',
-    longDescription: 'This Austin villa is a study in modern minimalism. The home is built around a central courtyard, allowing natural light to penetrate every room. Featuring high-efficiency solar panels and a Tesla Powerwall, this is a truly sustainable luxury home. The open-plan living area flows seamlessly into the outdoor pool deck, creating the perfect environment for entertaining guests in the Texas heat.',
+    longDescription: `Eco-Friendly Modernist Glass Villa for Sale in Austin, TX\n\nWhere sustainable technology meets high-end minimalist design!\n\nKey Features:\n- Smart Design: Open floor plan centered around a natural courtyard\n- Energy Efficient: Equipped with full solar panels and Tesla Powerwall\n- Spacious Living: 5,200 Sq.Ft of seamless indoor-outdoor living\n- 4 Bedrooms: Including a detached guest suite\n- 3 Bathrooms: Minimalist design with Hansgrohe fixtures\n- Modern Kitchen: Integrated smart appliances and hidden pantry\n\nHome Facilities:\n- Outdoor Pool Deck: Sustainable saltwater pool system\n- Smart Home Hub: Control lighting, sound, and security via smartphone\n- CCTV Security: 24/7 monitoring and perimeter infrared sensors\n- EV Charging: High-speed charging station in the 2-car garage\n\nOwn the future of living. Contact us today for a private viewing.`,
     location: 'Austin, TX',
     address: '4502 Scenic Dr, Austin, TX 78703',
     price: 3400000,

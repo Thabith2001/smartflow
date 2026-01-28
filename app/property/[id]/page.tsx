@@ -142,48 +142,43 @@ export default function PropertyPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
             <div className="lg:col-span-2 space-y-8 md:space-y-12">
-              {/* QUICK SUMMARY */}
-              <section className="bg-blue-50/40 p-5 md:p-8 border-l-4 md:border-l-8 border-[#1E3A8A] rounded-r-lg">
-                <h3 className="text-[9px] md:text-[10px] font-black text-[#1E3A8A] uppercase mb-3 tracking-[0.3em]">
-                  Quick Summary
-                </h3>
-                <p className="text-gray-800 text-lg md:text-xl font-medium leading-relaxed italic font-serif">
-                  "A{' '}
-                  {house.category === 'Land'
-                    ? 'prime plot of land'
-                    : `stunning ${house.beds} bedroom home`}{' '}
-                  located in {house.location}. This property features{' '}
-                  {house.landSize.toLocaleString()} sqft of space, making it a top-tier choice for{' '}
-                  {house.status === 'Sale' ? 'investment' : 'residence'}."
-                </p>
-              </section>
+              {/* QUICK SUMMARY  */}
+              <section className="bg-white p-6 md:p-10 border border-gray-200 relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-[#1E3A8A]"></div>
 
-              {/* PAYMENT OPTIONS SECTION */}
-              <section className="border-2 border-gray-100 p-6 md:p-10 rounded-sm bg-white">
-                <div className="flex items-center gap-4 mb-8">
-                  <h3 className="text-xl md:text-2xl font-black text-[#1E3A8A] uppercase tracking-tighter">
-                    Purchase Options
-                  </h3>
-                  <div className="h-[2px] w-full bg-green-500"></div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="border p-4 text-center hover:border-[#1E3A8A] transition-all cursor-pointer">
-                    <FaCreditCard className="mx-auto text-xl text-[#1E3A8A] mb-2" />
-                    <p className="font-black text-[10px] uppercase">Secure Card</p>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-[10px] md:text-[11px] font-black text-[#1E3A8A] uppercase tracking-[0.4em]">
+                      Quick Summary
+                    </h3>
+                    <div className="h-[1px] flex-grow bg-gray-100"></div>
                   </div>
-                  <div className="border p-4 text-center hover:border-[#1E3A8A] transition-all cursor-pointer">
-                    <FaUniversity className="mx-auto text-xl text-[#1E3A8A] mb-2" />
-                    <p className="font-black text-[10px] uppercase">Bank Transfer</p>
-                  </div>
-                  <div className="border p-4 text-center hover:border-[#1E3A8A] transition-all cursor-pointer">
-                    <FaShieldAlt className="mx-auto text-xl text-[#1E3A8A] mb-2" />
-                    <p className="font-black text-[10px] uppercase">Escrow Pay</p>
+
+                  <div className="relative">
+                    <span className="absolute -top-4 -left-2 text-6xl text-blue-900/5 font-serif select-none">
+                      “
+                    </span>
+
+                    <p className="relative z-10 text-gray-800 text-lg md:text-xl font-light leading-relaxed font-serif tracking-tight">
+                      A{' '}
+                      <span className="font-bold text-[#1E3A8A]">
+                        {house.category === 'Land'
+                          ? 'prime plot of land'
+                          : `stunning ${house.beds} bedroom home`}
+                      </span>{' '}
+                      located in {house.location}. This property features{' '}
+                      <span className="border-b-2 border-[#eab308]">
+                        {house.landSize.toLocaleString()} sqft
+                      </span>{' '}
+                      of space, making it a top-tier choice for{' '}
+                      {house.status === 'Sale' ? 'investment' : 'residence'}.
+                    </p>
                   </div>
                 </div>
               </section>
 
-              {/* SPECS TABLE */}
-              <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 py-6 md:py-10 border-y-2 border-gray-100">
+              {/* SPECS TABLE  */}
+              <section className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-gray-200 bg-white">
                 {[
                   {
                     icon: <FaRulerCombined />,
@@ -196,16 +191,21 @@ export default function PropertyPage() {
                 ].map((spec, i) => (
                   <div
                     key={i}
-                    className={`flex items-center gap-3 ${i !== 0 ? 'md:border-l md:pl-4 border-gray-100' : ''}`}
+                    className={`group flex flex-col items-center justify-center py-6 md:py-10 px-4 text-center border-gray-200 
+        ${i % 2 !== 0 ? 'border-l' : ''} 
+        ${i >= 2 ? 'border-t md:border-t-0' : ''} 
+        ${i > 0 ? 'md:border-l' : ''} 
+        transition-colors hover:bg-gray-50`}
                   >
-                    <div className="p-2 md:p-3 bg-gray-50 rounded-full text-[#1E3A8A] text-sm md:text-base">
+                    <div className="text-[#1E3A8A] text-lg md:text-xl mb-3 transition-transform group-hover:scale-110 duration-300">
                       {spec.icon}
                     </div>
-                    <div>
-                      <p className="text-[8px] md:text-[9px] font-black text-gray-400 uppercase">
+
+                    <div className="space-y-1">
+                      <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
                         {spec.label}
                       </p>
-                      <p className="font-black text-gray-800 text-sm md:text-base uppercase">
+                      <p className="font-black text-gray-900 text-xs md:text-sm uppercase tracking-tight">
                         {spec.val}
                       </p>
                     </div>
@@ -213,16 +213,61 @@ export default function PropertyPage() {
                 ))}
               </section>
 
+              {/* COMPACT PURCHASE OPTIONS */}
+              <section className="border border-gray-200 bg-white rounded-none">
+                <div className="px-5 py-3 border-b border-gray-200 bg-gray-50/50 flex justify-between items-center">
+                  <h3 className="text-[11px] font-black text-[#1E3A8A] uppercase tracking-[0.2em]">
+                    Purchase Options
+                  </h3>
+                  <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
+                    Secure Checkout
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
+                  {[
+                    { icon: <FaCreditCard />, label: 'Secure Card' },
+                    { icon: <FaUniversity />, label: 'Bank Transfer' },
+                    { icon: <FaShieldAlt />, label: 'Escrow Pay' },
+                  ].map((option, i) => (
+                    <div
+                      key={i}
+                      className="group flex items-center justify-center gap-3 py-4 px-2 hover:bg-[#1E3A8A] transition-colors cursor-pointer"
+                    >
+                      <div className="text-sm text-[#1E3A8A] group-hover:text-[#eab308] transition-colors">
+                        {option.icon}
+                      </div>
+                      <p className="font-bold text-[10px] uppercase tracking-widest text-gray-600 group-hover:text-white transition-colors">
+                        {option.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
               {/* DESCRIPTION */}
               <section>
                 <div className="flex items-center gap-4 mb-6 md:mb-8">
                   <h3 className="text-xl md:text-2xl font-black text-[#1E3A8A] uppercase tracking-tighter whitespace-nowrap">
-                    Property Description
+                    Property Details
                   </h3>
                   <div className="h-[2px] w-full bg-[#FFB800]"></div>
                 </div>
-                <div className="text-gray-600 leading-loose text-base md:text-lg font-medium whitespace-pre-line">
-                  {house.longDescription}
+
+                <div className="mt-8 md:mt-12">
+                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6">
+                    Detailed Property Overview
+                  </h4>
+
+                  <div className="relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gray-200 hidden md:block"></div>
+
+                    <div className="md:pl-8 text-gray-700 leading-[1.8] text-sm md:text-lg font-serif whitespace-pre-line">
+                      {house.longDescription}
+                    </div>
+                  </div>
+
+                  <div className="mt-10 h-[1px] w-12 bg-[#1E3A8A]"></div>
                 </div>
               </section>
 
@@ -278,7 +323,7 @@ export default function PropertyPage() {
                   </div>
                   <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                     <p className="text-[9px] font-black text-gray-400 uppercase mb-2">
-                      USA Support Hotline
+                      Support Hotline
                     </p>
                     <p className="text-xl md:text-2xl font-black text-gray-900">
                       +1 (800) 555-0199
