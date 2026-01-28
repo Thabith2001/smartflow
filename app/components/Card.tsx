@@ -11,7 +11,7 @@ import {
 } from 'react-icons/fa';
 import { LuRuler, LuLayers } from 'react-icons/lu';
 import { Property } from '../data/properties';
-
+import Link from 'next/link';
 import ViewingModal from './ViewingModal';
 
 interface CardProps {
@@ -34,32 +34,34 @@ const Card = ({ house, onExpand }: CardProps) => {
     <>
       <div className="group flex flex-col h-full bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden cursor-default">
         {/* --- IMAGE SECTION --- */}
-        <div
-          className="relative h-60 overflow-hidden bg-zinc-200 cursor-pointer"
-          onClick={() => onExpand(house.image)}
-        >
-          <img
-            src={house.image}
-            alt={house.title}
-            className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-          />
+        <div className="relative h-60 overflow-hidden bg-zinc-200">
+          <Link href={`/property/${house.id}`} className="block w-full h-full cursor-pointer">
+            <img
+              src={house.image}
+              alt={house.title}
+              className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+            />
+          </Link>
 
           {house.isFeatured && (
-            <div className="absolute top-4 left-4 bg-[#FFB800] text-[#0A1D37] text-[11px] font-black px-4 py-1.5 uppercase tracking-wider shadow-md z-10">
+            <div className="absolute top-4 left-4 bg-[#FFB800] text-[#0A1D37] text-[11px] font-black px-4 py-1.5 uppercase tracking-wider shadow-md z-10 pointer-events-none">
               LATEST
             </div>
           )}
 
-          <button className="absolute top-4 right-4 bg-white/90 p-2 text-[#0A1D37] hover:bg-[#FFB800] hover:text-white transition-all duration-300 shadow-sm z-20 scale-0 group-hover:scale-100 origin-center cursor-pointer">
+          <button
+            onClick={() => onExpand(house.image)}
+            className="absolute top-4 right-4 bg-white/90 p-2 text-[#0A1D37] hover:bg-[#FFB800] hover:text-white transition-all duration-300 shadow-sm z-20 scale-0 group-hover:scale-100 origin-center cursor-pointer"
+          >
             <FaExpandArrowsAlt size={18} />
           </button>
 
-          <div className="absolute bottom-0 left-0 bg-black/60 px-6 py-2 backdrop-blur-sm">
+          <div className="absolute bottom-0 left-0 bg-black/60 px-6 py-2 backdrop-blur-sm pointer-events-none">
             <span className="text-white text-base font-bold tracking-tight">{house.category}</span>
           </div>
         </div>
 
-        {/* --- CONTENT SECTION --- */}
+        {/* --- CONTENT SECTION  --- */}
         <div className="p-5 flex flex-col flex-1">
           <div className="flex justify-between items-start gap-2 mb-1">
             <h3 className="text-[#1E3A8A] text-xl font-black uppercase leading-tight">
@@ -76,8 +78,7 @@ const Card = ({ house, onExpand }: CardProps) => {
           </div>
 
           <p className="text-zinc-500 text-sm leading-relaxed mb-6 line-clamp-2">
-            {house.description ||
-              'Exclusive property featuring modern architecture and exclusive amenities.'}
+            {house.description || 'Exclusive property featuring modern architecture.'}
           </p>
 
           <hr className="border-gray-100 mb-5 mt-auto" />
@@ -90,7 +91,7 @@ const Card = ({ house, onExpand }: CardProps) => {
                   <FaTree size={16} /> PLOT
                 </div>
                 <div className="flex items-center gap-2">
-                  <LuRuler size={16} /> {house.landSize || house.sqft} SQFT
+                  <LuRuler size={16} /> {house.landSize} SQFT
                 </div>
               </div>
             ) : (
@@ -105,13 +106,13 @@ const Card = ({ house, onExpand }: CardProps) => {
                 </div>
                 <div className="flex items-center gap-2">
                   {house.category === 'Apartment' ? <LuLayers size={16} /> : <LuRuler size={16} />}
-                  <span>{house.sqft?.toLocaleString()} SQFT</span>
+                  <span>{house.landSize?.toLocaleString()} SQFT</span>
                 </div>
               </>
             )}
           </div>
 
-          {/* --- BUTTON SECTION --- */}
+          {/* --- VIEWING BUTTON --- */}
           <button
             onClick={() => setIsModalOpen(true)}
             className="w-full bg-[#1E3A8A] hover:bg-[#FFB800] text-white hover:text-[#0A1D37] py-4 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer group/btn"
@@ -122,7 +123,6 @@ const Card = ({ house, onExpand }: CardProps) => {
         </div>
       </div>
 
-      {/* --- RENDER SEPARATE  --- */}
       <ViewingModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
