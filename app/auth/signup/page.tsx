@@ -13,25 +13,55 @@ import {
   FaHome,
   FaIdCard,
 } from 'react-icons/fa';
+import { registerUser } from '@/services/auth.service';
+
+export type userRegister = {
+  name: string;
+  email: string;
+  phone: string;
+  homeAddress: string;
+  ssn: string;
+  role: string;
+  password: string;
+  confirmPassword: string,
+};
 
 export default function SignupPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [homeAddress, setHomeAddress] = useState('');
-  const [ssn, setSsn] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [formData, setFormData] = useState<userRegister>({
+    name: '',
+    email: '',
+    phone: '',
+    homeAddress: '',
+    ssn: '',
+    role:'CUSTOMER',
+    password: '',
+    confirmPassword: '',
+  });
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleChange = (field: keyof userRegister, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const { password, confirmPassword } = formData;
+
     if (password !== confirmPassword) {
       alert('Passwords do not match');
       return;
     }
 
-    console.log({ name, email, phone, homeAddress, ssn, password });
+    console.log('user:', formData);
+
+    const resp = await registerUser(formData);
+    console.log(resp);
   };
+
+
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col">
@@ -58,7 +88,8 @@ export default function SignupPage() {
       {/* MAIN CONTENT */}
       <main className="flex-grow flex flex-col items-center justify-center p-6 py-12">
         {/* NOTICE BANNER */}
-        <div className="mb-6 w-full max-w-4xl rounded border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+        <div
+          className="mb-6 w-full max-w-4xl rounded border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
           <strong>Registration:</strong> Create an account to access the SMARTFLOW Property
           Management System. Verification is required for all new vendors and users.
         </div>
@@ -76,15 +107,16 @@ export default function SignupPage() {
                 </label>
 
                 <div className="relative group">
-                  <FaUser className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                  <FaUser
+                    className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
 
                   <input
                     type="text"
                     className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none
                  focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={formData.name}
+                    onChange={(e) => handleChange('name',e.target.value)}
                     required
                   />
                 </div>
@@ -97,14 +129,15 @@ export default function SignupPage() {
                 </label>
 
                 <div className="relative group">
-                  <FaEnvelope className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                  <FaEnvelope
+                    className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                   <input
                     type="email"
                     className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none
                  focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     placeholder="name@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={(e) => handleChange('email',e.target.value)}
                     required
                   />
                 </div>
@@ -114,7 +147,8 @@ export default function SignupPage() {
               <div>
                 <label className="mb-1 block text-sm font-medium text-zinc-600">Phone Number</label>
                 <div className="relative group">
-                  <FaPhone className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                  <FaPhone
+                    className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                   <input
                     type="tel"
                     inputMode="numeric"
@@ -123,7 +157,7 @@ export default function SignupPage() {
                     className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none
                  focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     placeholder="(555) 000-0000"
-                    value={phone}
+                    value={formData.phone}
                     onChange={(e) => {
                       let input = e.target.value.replace(/\D/g, '');
                       if (input.length > 10) input = input.slice(0, 10);
@@ -136,7 +170,7 @@ export default function SignupPage() {
                       if (middle) formatted += ` ${middle}`;
                       if (last) formatted += `-${last}`;
 
-                      setPhone(formatted);
+                      handleChange('phone',formatted);
                     }}
                     required
                   />
@@ -150,13 +184,14 @@ export default function SignupPage() {
                 </label>
 
                 <div className="relative group">
-                  <FaIdCard className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                  <FaIdCard
+                    className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                   <input
                     type="text"
                     className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none
                  focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     placeholder="123-45-6789"
-                    value={ssn}
+                    value={formData.ssn}
                     onChange={(e) => {
                       let input = e.target.value.replace(/\D/g, '');
                       if (input.length > 9) input = input.slice(0, 9);
@@ -169,7 +204,7 @@ export default function SignupPage() {
                       if (part2) formatted += `-${part2}`;
                       if (part3) formatted += `-${part3}`;
 
-                      setSsn(formatted);
+                      handleChange('ssn',formatted);
                     }}
                     pattern="\d{3}-\d{2}-\d{4}"
                     title="Enter valid SSN in format XXX-XX-XXXX"
@@ -185,14 +220,15 @@ export default function SignupPage() {
                 </label>
 
                 <div className="relative group">
-                  <FaHome className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                  <FaHome
+                    className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                   <input
                     type="text"
                     className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none
                  focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     placeholder="123 Main St, City, State"
-                    value={homeAddress}
-                    onChange={(e) => setHomeAddress(e.target.value)}
+                    value={formData.homeAddress}
+                    onChange={(e) => handleChange('homeAddress',e.target.value)}
                     required
                   />
                 </div>
@@ -206,14 +242,15 @@ export default function SignupPage() {
                   </label>
 
                   <div className="relative group">
-                    <FaLock className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                    <FaLock
+                      className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                     <input
                       type="password"
                       className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none
                    focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                       placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={formData.password}
+                      onChange={(e) => handleChange('password',e.target.value)}
                       required
                     />
                   </div>
@@ -225,14 +262,15 @@ export default function SignupPage() {
                   </label>
 
                   <div className="relative group">
-                    <FaLock className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                    <FaLock
+                      className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                     <input
                       type="password"
                       className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none
                    focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                       placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      value={formData.confirmPassword}
+                      onChange={(e) => handleChange('confirmPassword',e.target.value)}
                       required
                     />
                   </div>
@@ -259,7 +297,8 @@ export default function SignupPage() {
 
           {/* RIGHT – INFO PANEL */}
 
-          <div className="relative w-full bg-blue-900 p-10 text-white md:w-1/2 flex flex-col justify-center overflow-hidden">
+          <div
+            className="relative w-full bg-blue-900 p-10 text-white md:w-1/2 flex flex-col justify-center overflow-hidden">
             <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-white/10" />
 
             <h2 className="mb-4 text-3xl font-bold leading-tight">

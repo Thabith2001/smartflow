@@ -65,7 +65,7 @@ const milestones = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
-      <Header />
+      <Header/>
 
       {/* --- HERO SECTION --- */}
       <section className="relative py-32 bg-[#0A1D37] text-white overflow-hidden">
@@ -132,8 +132,8 @@ export default function AboutPage() {
             Our Vision
           </h2>
           <p className="text-2xl font-bold leading-snug italic">
-            "To become the global standard in intelligent asset management, where every property is
-            optimized for its highest and best use."
+            &#34;To become the global standard in intelligent asset management, where every property is
+            optimized for its highest and best use.&#34;
           </p>
         </div>
       </section>
@@ -192,7 +192,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-16 border-l-8 border-[#FFB800] pl-6">
             <h2 className="text-4xl md:text-5xl font-black text-[#0A1D37] uppercase tracking-tighter leading-none">
-              The Firm's <br />
+              The Firm&#39;s <br />
               <span className="text-[#1E3A8A]">Evolution</span>
             </h2>
           </div>

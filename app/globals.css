@@ -5,43 +5,43 @@
 /*--- HEADER STYLES ---*/
 
 .nav-link {
-  @apply text-sm font-medium text-zinc-700 hover:text-black transition-colors dark:text-zinc-400 dark:hover:text-white;
+    @apply text-sm font-medium text-zinc-700 hover:text-black transition-colors dark:text-zinc-400 dark:hover:text-white;
 }
 
 .mobile-link {
-  @apply text-sm font-medium text-zinc-800 dark:text-zinc-200;
+    @apply text-sm font-medium text-zinc-800 dark:text-zinc-200;
 }
 
 .icon-btn {
-  @apply rounded-full border border-zinc-400 p-2 text-zinc-600 hover:bg-zinc-200
-         dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800;
+    @apply rounded-full border border-zinc-400 p-2 text-zinc-600 hover:bg-zinc-200
+    dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800;
 }
 
 /*--- HEADER END ---*/
 
 /* Custom Scrollbar Styling */
 ::-webkit-scrollbar {
-  width: 12px;
+    width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+    background: #1a1a1a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ffb800;
-  border-radius: 20px;
-  border: 3px solid #1a1a1a;
+    background: #ffb800;
+    border-radius: 20px;
+    border: 3px solid #1a1a1a;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffd700;
-  cursor: pointer;
+    background: #ffd700;
+    cursor: pointer;
 }
 
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #ffb800 #1a1a1a;
+    scrollbar-width: thin;
+    scrollbar-color: #ffb800 #1a1a1a;
 }
 
 /*------------------------------*/
