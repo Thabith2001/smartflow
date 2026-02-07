@@ -19,11 +19,11 @@ export default function PortfolioPage() {
   const itemsPerPage = 9;
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage((prev) => (prev === 1 ? prev : 1));
   }, [search, activeFilter, statusFilter, priceRange, sortBy]);
 
   const filteredProperties = useMemo(() => {
-    let result = portfolioData.filter((item: Property) => {
+    const result = portfolioData.filter((item: Property) => {
       const matchesSearch =
         item.title.toLowerCase().includes(search.toLowerCase()) ||
         item.location.toLowerCase().includes(search.toLowerCase());

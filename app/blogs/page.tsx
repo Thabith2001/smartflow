@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useMemo, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -160,8 +159,9 @@ export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
+  // When the search term changes, reset to page 1 only if not already 1
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage((prev) => (prev === 1 ? prev : 1));
   }, [search]);
 
   const filteredPosts = useMemo(() => {
@@ -219,7 +219,7 @@ export default function BlogPage() {
       <main className="max-w-[1400px] mx-auto px-6 py-16 flex-1 w-full">
         {currentItems.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {currentItems.map((post, index) => (
+            {currentItems.map((post) => (
               <article
                 key={post.id}
                 className="group bg-white border border-zinc-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"

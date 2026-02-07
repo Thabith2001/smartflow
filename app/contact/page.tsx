@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @next/next/no-img-element */
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -23,7 +24,7 @@ export default function ContactPage() {
     message: '',
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('Form Submitted:', formData);
     alert('Thank you! Our team will contact you within 24 hours.');
@@ -214,7 +215,7 @@ export default function ContactPage() {
                   Your Message
                 </label>
                 <textarea
-                  rows="5"
+                  rows={5}
                   required
                   className="w-full px-4 py-4 bg-zinc-50 border border-zinc-200 outline-none focus:border-[#1E3A8A] transition-colors rounded-sm resize-none"
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -237,7 +238,7 @@ export default function ContactPage() {
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.9732!3d40.7619!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c258f9cfcb250d%3A0xdb570dd4f1f09b01!2sTrump%20Tower!5e0!3m2!1sen!2sus!4v1674550000000!5m2!1sen!2sus"
           className="w-full h-full border-0 grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700"
-          allowFullScreen=""
+          allowFullScreen
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           title="Location Map"
