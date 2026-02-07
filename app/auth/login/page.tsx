@@ -10,33 +10,47 @@ import {
   FaUser,
   FaExclamationTriangle,
 } from 'react-icons/fa';
+import { loginUser } from '@/services/auth.service';
+import { userLogin} from '@/types/users.type';
+import { useRouter } from 'next/navigation';
+
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMessage('');
-
-    // --- LOGIC---
-    setTimeout(() => {
-      const isTechnician = email.toLowerCase().includes('tech');
-      const isApprovedByAdmin = false;
-
-      if (isTechnician && !isApprovedByAdmin) {
-        setErrorMessage('Technician account pending Admin approval. Please contact management.');
-        setLoading(false);
-      } else {
-        console.log('Login Successful', { email, password });
-
-        setLoading(false);
-      }
-    }, 1500);
+  const handleChange = (field: keyof userLogin, value: string) => {
+    setCredentials((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
+
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log('Login Attempt', credentials);
+    const resp = await loginUser(credentials);
+    setLoading(true);
+
+    if(resp?.id === undefined) {
+      setErrorMessage('Invalid credentials. Please try again.');
+      setLoading(false);
+      return;
+    }
+
+    router.push(
+      resp.role === 'CUSTOMER'
+        ? '/'
+        : '/auth/dashboard/vendor'
+    );
+
+    setErrorMessage('');
+  };
+
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col">
@@ -60,8 +74,10 @@ export default function LoginPage() {
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-grow flex flex-col items-center justify-center p-4">
-        <div className="mb-8 w-full max-w-4xl rounded-lg border border-blue-200 bg-blue-50 px-5 py-3 text-sm text-blue-800 flex items-center gap-3">
-          <span className="flex-shrink-0 bg-blue-800 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold">
+        <div
+          className="mb-8 w-full max-w-4xl rounded-lg border border-blue-200 bg-blue-50 px-5 py-3 text-sm text-blue-800 flex items-center gap-3">
+          <span
+            className="flex-shrink-0 bg-blue-800 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold">
             !
           </span>
           Authorized access only. Unauthorized misuse is strictly monitored.
@@ -79,7 +95,8 @@ export default function LoginPage() {
 
             {/* ROLE ERROR DISPLAY */}
             {errorMessage && (
-              <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-xs font-bold flex items-center gap-2">
+              <div
+                className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-xs font-bold flex items-center gap-2">
                 <FaExclamationTriangle /> {errorMessage}
               </div>
             )}
@@ -90,13 +107,14 @@ export default function LoginPage() {
                   Email Address
                 </label>
                 <div className="relative group">
-                  <FaUser className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                  <FaUser
+                    className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                   <input
                     type="email"
                     className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     placeholder="name@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={credentials.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
                     required
                   />
                 </div>
@@ -105,13 +123,14 @@ export default function LoginPage() {
               <div>
                 <label className="mb-1.5 block text-sm font-semibold text-zinc-700">Password</label>
                 <div className="relative group">
-                  <FaLock className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
+                  <FaLock
+                    className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
                   <input
                     type="password"
                     className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
                     placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={credentials.password}
+                    onChange={(e) => handleChange('password', e.target.value)}
                     required
                   />
                 </div>
@@ -166,7 +185,8 @@ export default function LoginPage() {
           </div>
 
           {/* RIGHT  */}
-          <div className="w-full bg-blue-900 p-12 text-white md:w-1/2 flex flex-col justify-center relative overflow-hidden">
+          <div
+            className="w-full bg-blue-900 p-12 text-white md:w-1/2 flex flex-col justify-center relative overflow-hidden">
             <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/5" />
 
             <div className="relative z-10">

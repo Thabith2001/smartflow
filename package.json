@@ -13,10 +13,12 @@
     "bcryptjs": "^3.0.3",
     "crypto": "^1.0.1",
     "framer-motion": "^12.29.0",
+    "jsonwebtoken": "^9.0.3",
     "jspdf": "^4.0.0",
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^0.562.0",
     "mongodb": "^7.0.0",
+    "mongoose": "^9.1.5",
     "next": "^16.1.6",
     "react": "19.2.3",
     "react-csv": "^2.2.2",
@@ -26,6 +28,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

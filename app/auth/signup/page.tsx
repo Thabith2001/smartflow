@@ -14,17 +14,8 @@ import {
   FaIdCard,
 } from 'react-icons/fa';
 import { registerUser } from '@/services/auth.service';
+import { userRegister } from '@/types/users.type';
 
-export type userRegister = {
-  name: string;
-  email: string;
-  phone: string;
-  homeAddress: string;
-  ssn: string;
-  role: string;
-  password: string;
-  confirmPassword: string,
-};
 
 export default function SignupPage() {
   const [formData, setFormData] = useState<userRegister>({
@@ -32,10 +23,9 @@ export default function SignupPage() {
     email: '',
     phone: '',
     homeAddress: '',
-    ssn: '',
     role:'CUSTOMER',
     password: '',
-    confirmPassword: '',
+    confirmPassword: ''
   });
 
   const handleChange = (field: keyof userRegister, value: string) => {
@@ -176,43 +166,6 @@ export default function SignupPage() {
                   />
                 </div>
               </div>
-
-              {/* SSN (Social Security Number) */}
-              <div>
-                <label className="mb-1.5 block text-sm font-semibold text-zinc-700">
-                  SSN (Social Security Number)
-                </label>
-
-                <div className="relative group">
-                  <FaIdCard
-                    className="absolute left-3 top-3 text-zinc-400 group-focus-within:text-blue-900 transition-colors" />
-                  <input
-                    type="text"
-                    className="w-full rounded-lg border border-zinc-300 bg-zinc-50 py-2.5 pl-10 pr-4 text-sm outline-none
-                 focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all"
-                    placeholder="123-45-6789"
-                    value={formData.ssn}
-                    onChange={(e) => {
-                      let input = e.target.value.replace(/\D/g, '');
-                      if (input.length > 9) input = input.slice(0, 9);
-
-                      const part1 = input.slice(0, 3);
-                      const part2 = input.slice(3, 5);
-                      const part3 = input.slice(5, 9);
-
-                      let formatted = part1;
-                      if (part2) formatted += `-${part2}`;
-                      if (part3) formatted += `-${part3}`;
-
-                      handleChange('ssn',formatted);
-                    }}
-                    pattern="\d{3}-\d{2}-\d{4}"
-                    title="Enter valid SSN in format XXX-XX-XXXX"
-                    required
-                  />
-                </div>
-              </div>
-
               {/* Home Address */}
               <div>
                 <label className="mb-1.5 block text-sm font-semibold text-zinc-700">

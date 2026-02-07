@@ -12,7 +12,6 @@ export const userRepository = {
     email: string;
     phone: string;
     homeAddress: string;
-    ssn: string;
     role: string;
     password: string;
   }) {

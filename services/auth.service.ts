@@ -1,9 +1,13 @@
 'use server';
 
-import { userRepository } from '@/repositories/user.repository';
 import bcrypt from 'bcryptjs';
-import { encryptSSN } from '@/util/encrypt';
-import type { userRegister } from '@/app/auth/signup/page';
+import { userRepository } from '@/repositories/user.repository';
+
+
+import { createSession } from '@/util/session';
+import { toSafeUser } from '@/dto/user.dto';
+import { userLogin, userRegister } from '@/types/users.type';
+
 
 export async function registerUser(data: userRegister) {
   const {
@@ -11,13 +15,11 @@ export async function registerUser(data: userRegister) {
     email,
     phone,
     homeAddress,
-    ssn,
     role,
     password,
     confirmPassword,
   } = data;
 
-  //  Business rules
   if (password !== confirmPassword) {
     throw new Error('Passwords do not match');
   }
@@ -26,30 +28,43 @@ export async function registerUser(data: userRegister) {
     throw new Error('Password must be at least 8 characters');
   }
 
-  const existingUser = await userRepository.findByEmail(email);
-  if (existingUser) {
+  if (await userRepository.findByEmail(email)) {
     throw new Error('Email already registered');
   }
-
-  //  Security
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const encryptedSSN = encryptSSN(ssn);
 
   const user = await userRepository.create({
     name,
     email,
     phone,
     homeAddress,
-    ssn: encryptedSSN,
     role,
-    password: hashedPassword,
+    password: await bcrypt.hash(password, 10),
   });
 
-  //  RETURN A SAFE DTO (NOT DB OBJECT)
-  return {
-    id: user._id.toString(),
+  await createSession(user);
+  return toSafeUser(user);
+}
+
+
+export async function loginUser(credentials: userLogin) {
+  const user = await userRepository.findByEmail(credentials.email);
+  if (!user) throw new Error('Invalid credentials');
+
+  const valid = await bcrypt.compare(
+    credentials.password,
+    user.password,
+  );
+  if (!valid) throw new Error('Invalid credentials');
+
+  await createSession({
+    _id: user?._id,
+    role: user?.role,
+  });
+
+  return toSafeUser({
+    _id: user._id,
     name: user.name,
     email: user.email,
     role: user.role,
-  };
+  });
 }
