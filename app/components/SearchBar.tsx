@@ -3,17 +3,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { FaSearch, FaMapMarkerAlt, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
-import { portfolioData } from '../data/properties';
+import { portfolioData, Property } from '../data/properties';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Property[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const searchRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !(searchRef.current as HTMLElement).contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -21,7 +21,7 @@ export default function SearchBar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setQuery(val);
 

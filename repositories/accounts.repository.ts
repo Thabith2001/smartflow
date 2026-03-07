@@ -1,10 +1,10 @@
-import { getDb } from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
+import { getDb } from '@/lib/mongodb';
+import { ObjectId } from 'mongodb';
 
-export const userRepository = {
+export const accountsRepository = {
   async findByEmail(email: string) {
     const db = await getDb();
-    return await db.collection("users").findOne({ email });
+    return await db.collection('users').findOne({ email });
   },
 
   async create(user: {
@@ -17,7 +17,7 @@ export const userRepository = {
   }) {
     const db = await getDb();
 
-    const result = await db.collection("users").insertOne({
+    const result = await db.collection('users').insertOne({
       ...user,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -31,8 +31,7 @@ export const userRepository = {
 
   async findById(id: string) {
     const db = await getDb();
-    return await db
-      .collection("users")
-      .findOne({ _id: new ObjectId(id) });
+    return await db.collection('users').findOne({ _id: new ObjectId(id) });
   },
 };
+

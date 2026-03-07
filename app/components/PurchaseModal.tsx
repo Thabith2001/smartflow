@@ -12,10 +12,22 @@ import {
   FaSpinner,
 } from 'react-icons/fa';
 
-const PurchaseModal = ({ isOpen, onClose, house }) => {
-  const [step, setStep] = useState('details');
+interface House {
+  id: number | string;
+  title: string;
+  price: number;
+}
+
+interface PurchaseModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  house: House;
+}
+
+const PurchaseModal: React.FC<PurchaseModalProps> = ({ isOpen, onClose, house }) => {
+  const [step, setStep] = useState<'details' | 'selection' | 'stripe' | 'bank' | 'escrow' | 'success'>('details');
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -26,16 +38,16 @@ const PurchaseModal = ({ isOpen, onClose, house }) => {
     }
   }, [isOpen]);
 
-  const handleNext = (e) => {
+  const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
     setStep('selection');
   };
 
-  const simulateSubmit = (nextStep) => {
+  const simulateSubmit = (nextStep: 'success' | 'stripe' | 'bank' | 'escrow') => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      setStep(nextStep);
+      setStep(nextStep === 'success' ? 'success' : nextStep);
     }, 1500);
   };
 
@@ -46,7 +58,7 @@ const PurchaseModal = ({ isOpen, onClose, house }) => {
     onClose();
   };
 
-  const stepIndex = { details: 0, selection: 1, stripe: 2, bank: 2, escrow: 2, success: 3 };
+  const stepIndex: Record<string, number> = { details: 0, selection: 1, stripe: 2, bank: 2, escrow: 2, success: 3 };
   const currentProgress = (stepIndex[step] / 3) * 100;
 
   return (
@@ -99,7 +111,7 @@ const PurchaseModal = ({ isOpen, onClose, house }) => {
                   label="Full Legal Name"
                   placeholder="e.g. JOHN DOE"
                   required
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -108,14 +120,14 @@ const PurchaseModal = ({ isOpen, onClose, house }) => {
                     type="email"
                     placeholder="JD@EXAMPLE.COM"
                     required
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
                   />
                   <InputField
                     label="Phone Number"
                     type="tel"
                     placeholder="+1 (000) 000-0000"
                     required
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, phone: e.target.value })}
                   />
                 </div>
               </div>
@@ -265,7 +277,7 @@ const PurchaseModal = ({ isOpen, onClose, house }) => {
                   <input
                     type="file"
                     className="hidden"
-                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedFile(e.currentTarget.files?.[0] ?? null)}
                   />
                 </label>
               </div>
@@ -364,7 +376,8 @@ Type: Business Checking
   );
 };
 
-const InputField = ({ label, ...props }) => (
+type InputFieldProps = React.ComponentPropsWithoutRef<'input'> & { label: string };
+const InputField: React.FC<InputFieldProps> = ({ label, ...props }) => (
   <div className="space-y-1">
     <label className="text-[8px] md:text-[9px] font-black uppercase text-gray-500 tracking-widest">
       {label}
@@ -376,14 +389,20 @@ const InputField = ({ label, ...props }) => (
   </div>
 );
 
-const PaymentOption = ({ icon, title, subtitle, onClick }) => (
+type PaymentOptionProps = {
+  icon: React.ReactElement<any>;
+  title: string;
+  subtitle: string;
+  onClick: () => void;
+};
+const PaymentOption: React.FC<PaymentOptionProps> = ({ icon, title, subtitle, onClick }) => (
   <button
     onClick={onClick}
     className="flex items-center justify-between p-4 md:p-5 border-2 border-gray-50 hover:border-[#1E3A8A] active:bg-blue-50 transition-all group text-left rounded-sm w-full"
   >
     <div className="flex items-center gap-3 md:gap-4">
       <div className="bg-gray-100 p-2 md:p-3 rounded-full text-[#1E3A8A] group-hover:bg-[#1E3A8A] group-hover:text-white transition-colors">
-        {React.cloneElement(icon, { size: 16 })}
+        {React.isValidElement(icon) ? React.cloneElement(icon as React.ReactElement<any>, { size: 16 } as any) : icon}
       </div>
       <div>
         <span className="block font-black uppercase text-[10px] md:text-[11px] tracking-tight text-gray-900">

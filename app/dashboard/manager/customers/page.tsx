@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type Customer = {
   id: string;
@@ -9,32 +9,43 @@ type Customer = {
   status: string;
 };
 
-const initialCustomers: Customer[] = [
-  {
-    id: 'c1',
-    name: 'Meera Silva',
-    email: 'meera@gmail.com',
-    phone: '0771234567',
-    status: 'Active',
-  },
-  {
-    id: 'c2',
-    name: 'Nuwan Perera',
-    email: 'nuwan@gmail.com',
-    phone: '0719876543',
-    status: 'Inactive',
-  },
-  {
-    id: 'c3',
-    name: 'Amal Fernando',
-    email: 'amal@gmail.com',
-    phone: '0765554444',
-    status: 'Active',
-  },
-];
-
 export default function CustomersPage() {
-  const [customers, setCustomers] = useState<Customer[]>(initialCustomers);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetch('/api/manager/customers')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!mounted) return;
+        if (!data?.ok) {
+          setError(data?.error || 'Failed to load customers');
+          setCustomers([]);
+          return;
+        }
+        setCustomers(data.customers || []);
+      })
+      .catch((err) => {
+        console.error('Fetch customers error', err);
+        if (!mounted) return;
+        setError('Network error');
+        setCustomers([]);
+      })
+      .finally(() => {
+        if (!mounted) return;
+        setLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (loading) return <div className="p-8">Loading customers...</div>;
+  if (error) return <div className="p-8 text-red-600">{error}</div>;
 
   return (
     <div className="p-8 space-y-6 bg-neutral-50 min-h-full font-inter">

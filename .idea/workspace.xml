@@ -5,8 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d08b150-d085-4726-84de-7abc7fdf5191" name="Changes" comment="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header">
-      <change afterPath="$PROJECT_DIR$/src-only.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ReadMe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/manager/customers/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/accounts.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/admin.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/customer.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/manager.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/vendor.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/customers.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/auth/me/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/auth/me/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/PurchaseModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/PurchaseModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/SearchBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/SearchBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/home/FeaturedProperties.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/home/FeaturedProperties.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/admin/customers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/admin/customers/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/customers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/customers/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/tickets/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/tickets/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repositories/user.repository.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/auth.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +43,7 @@
     </selectedModels>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="92" />
+    <option name="cachedIndexableFilesCount" value="106" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -176,7 +193,8 @@
       <workItem from="1769968212393" duration="10924000" />
       <workItem from="1770389834801" duration="183000" />
       <workItem from="1770390377657" duration="9500000" />
-      <workItem from="1772616603685" duration="8438000" />
+      <workItem from="1772616603685" duration="9854000" />
+      <workItem from="1772826750201" duration="8491000" />
     </task>
     <task id="LOCAL-00002" summary="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header">
       <option name="closed" value="true" />
@@ -186,7 +204,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772633038409</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header">
+      <option name="closed" value="true" />
+      <created>1772633236405</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1772633236405</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

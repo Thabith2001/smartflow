@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { verifyToken } from '../../../../util/jwt'; // project-root util/jwt
+import { verifyToken } from '@/util/jwt';
 
 export async function GET() {
   try {
