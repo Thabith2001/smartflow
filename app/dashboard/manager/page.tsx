@@ -7,9 +7,6 @@ import {
   FaWallet,
   FaChartBar,
   FaArrowRight,
-  FaUserCog,
-  FaDollarSign,
-  FaCheckCircle,
   FaPlus,
   FaTrash,
 } from 'react-icons/fa';

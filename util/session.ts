@@ -1,19 +1,22 @@
 import { cookies } from 'next/headers';
 import { signToken } from '@/util/jwt';
-import { sessionType } from '@/types/users.type';
 
-export async function  createSession(sessions: sessionType) {
+
+export async function createSession(payload: {
+  _id: any;
+  role: string;
+}) {
   const token = signToken({
-    id: sessions._id.toString(),
-    role: sessions.role,
+    id: payload._id.toString(),
+    role: payload.role,
   });
 
-  (await cookies()).set({
-    name: 'token',
-    value: token,
+  (await cookies()).set('token', token, {
     httpOnly: true,
-    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
     path: '/',
-    maxAge: 60 * 60 * 24 * 7,
   });
+
+  return token;
 }

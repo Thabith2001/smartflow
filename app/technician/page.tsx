@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @next/next/no-img-element */
 
 import React, { useState } from 'react';
 import Header from '../components/Header';
@@ -19,11 +20,36 @@ import {
   FaBell,
 } from 'react-icons/fa';
 
-const TechnicianDashboard = () => {
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(null);
+type Job = {
+  id: number;
+  status: string;
+  name: string;
+  date: string;
+  service: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  notes?: string;
+};
 
-  const [techInfo, setTechInfo] = useState({
+type TechInfo = {
+  name: string;
+  id: string;
+  role: string;
+  rating: number;
+  email: string;
+  phone: string;
+  location: string;
+  status: string;
+  completedJobs: number;
+  image: string | null;
+};
+
+const TechnicianDashboard: React.FC = () => {
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+
+  const [techInfo, setTechInfo] = useState<TechInfo>({
     name: 'Alex Rivera',
     id: 'TECH-8821',
     role: 'Senior HVAC Specialist',
@@ -36,7 +62,7 @@ const TechnicianDashboard = () => {
     image: null,
   });
 
-  const [jobs, setJobs] = useState([
+  const [jobs, setJobs] = useState<Job[]>([
     {
       id: 1,
       status: 'pending',
@@ -61,22 +87,21 @@ const TechnicianDashboard = () => {
     },
   ]);
 
-  const handleAcceptJob = (jobId) => {
+  const handleAcceptJob = (jobId: number) => {
     setJobs((prev) => prev.map((j) => (j.id === jobId ? { ...j, status: 'accepted' } : j)));
     setSelectedJob(null);
   };
 
-  const handleMarkComplete = (jobId) => {
+  const handleMarkComplete = (jobId: number) => {
     setJobs((prev) => prev.filter((j) => j.id !== jobId));
     setTechInfo((prev) => ({ ...prev, completedJobs: prev.completedJobs + 1 }));
     setSelectedJob(null);
   };
 
-  const handleUpdateProfile = (newData) => {
+  const handleUpdateProfile = (newData: { name?: string; profileImage?: string }) => {
     setTechInfo((prev) => ({
       ...prev,
-      name: newData.name,
-
+      name: newData.name || prev.name,
       image: newData.profileImage || prev.image,
     }));
     setIsProfileModalOpen(false);
@@ -253,7 +278,7 @@ const TechnicianDashboard = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="4" className="px-6 py-12 text-center text-gray-400 italic">
+                        <td colSpan={4} className="px-6 py-12 text-center text-gray-400 italic">
                           No active jobs. Accept requests above.
                         </td>
                       </tr>
@@ -287,7 +312,11 @@ const TechnicianDashboard = () => {
 };
 
 /* HELPERS */
-const InfoItem = ({ icon, label, value }) => (
+const InfoItem: React.FC<{ icon: React.ReactNode; label: string; value: string | number }> = ({
+  icon,
+  label,
+  value,
+}) => (
   <div className="flex items-center gap-3">
     <div className="text-gray-300 w-4">{icon}</div>
     <div>
@@ -297,8 +326,13 @@ const InfoItem = ({ icon, label, value }) => (
   </div>
 );
 
-const StatCard = ({ icon, count, label, color }) => {
-  const colors = {
+const StatCard: React.FC<{
+  icon: React.ReactNode;
+  count: number | string;
+  label: string;
+  color: 'blue' | 'yellow' | 'gray';
+}> = ({ icon, count, label, color }) => {
+  const colors: Record<'blue' | 'yellow' | 'gray', string> = {
     blue: 'bg-[#1e3a8a] text-white',
     yellow: 'bg-[#eab308] text-[#1e3a8a]',
     gray: 'bg-gray-100 text-gray-800',
@@ -314,7 +348,12 @@ const StatCard = ({ icon, count, label, color }) => {
   );
 };
 
-const JobRow = ({ name, date, service, onManage }) => (
+const JobRow: React.FC<{
+  name: string;
+  date: string;
+  service: string;
+  onManage: () => void;
+}> = ({ name, date, service, onManage }) => (
   <tr className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
     <td className="px-6 py-4 uppercase text-[#1e3a8a]">{name}</td>
     <td className="px-6 py-4 text-gray-500 uppercase">{date}</td>

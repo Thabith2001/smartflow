@@ -1,7 +1,7 @@
 'use server';
 
 import bcrypt from 'bcryptjs';
-import { userRepository } from '@/repositories/user.repository';
+import { accountsRepository } from '@/repositories/accounts.repository';
 
 
 import { createSession } from '@/util/session';
@@ -28,11 +28,11 @@ export async function registerUser(data: userRegister) {
     throw new Error('Password must be at least 8 characters');
   }
 
-  if (await userRepository.findByEmail(email)) {
+  if (await accountsRepository.findByEmail(email)) {
     throw new Error('Email already registered');
   }
 
-  const user = await userRepository.create({
+  const user = await accountsRepository.create({
     name,
     email,
     phone,
@@ -47,7 +47,7 @@ export async function registerUser(data: userRegister) {
 
 
 export async function loginUser(credentials: userLogin) {
-  const user = await userRepository.findByEmail(credentials.email);
+  const user = await accountsRepository.findByEmail(credentials.email);
   if (!user) throw new Error('Invalid credentials');
 
   const valid = await bcrypt.compare(

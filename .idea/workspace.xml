@@ -4,17 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6d08b150-d085-4726-84de-7abc7fdf5191" name="Changes" comment="feat(auth): implement secure user signup with roles and server actions">
-      <change afterPath="$PROJECT_DIR$/dto/user.dto.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/users.type.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/util/jwt.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/util/session.ts" afterDir="false" />
+    <list default="true" id="6d08b150-d085-4726-84de-7abc7fdf5191" name="Changes" comment="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header">
+      <change afterPath="$PROJECT_DIR$/ReadMe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/manager/customers/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/accounts.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/admin.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/customer.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/manager.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/vendor.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/customers.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/auth/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/auth/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/auth/signup/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/auth/signup/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/user.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/user.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/auth/me/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/auth/me/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/PurchaseModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/PurchaseModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/SearchBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/SearchBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/home/FeaturedProperties.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/home/FeaturedProperties.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/admin/customers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/admin/customers/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/customers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/customers/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/tickets/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/tickets/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repositories/user.repository.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/auth.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,13 +37,13 @@
   </component>
   <component name="CopilotUserSelectedModel">
     <selectedModels>
+      <entry key="edit-panel" value="GPT-5 mini" />
       <entry key="chat-panel" value="GPT-5 mini" />
       <entry key="agent-panel" value="GPT-5 mini" />
-      <entry key="edit-panel" value="GPT-5 mini" />
     </selectedModels>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="93" />
+    <option name="cachedIndexableFilesCount" value="106" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -46,6 +54,19 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="01-backend-devlop" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
         <option value="gthilakshana &lt;gavrawavanniarachchi@gmail.com&gt;" />
@@ -57,6 +78,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -66,7 +88,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/thabith2001/smartflow.git&quot;,
+    &quot;url&quot;: &quot;git@github.com:thabith2001/smartflow.git&quot;,
     &quot;accountId&quot;: &quot;ad42e5c3-d9cf-439f-aa7b-037e6afcd84c&quot;
   }
 }</component>
@@ -96,6 +118,7 @@
     &quot;com.github.patou.gitmoji.migration-offered&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;01-backend-devlop&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
     &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
     &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
@@ -103,6 +126,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Users/thabiththabith/group_projects/smartflow/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -169,8 +193,26 @@
       <workItem from="1769968212393" duration="10924000" />
       <workItem from="1770389834801" duration="183000" />
       <workItem from="1770390377657" duration="9500000" />
+      <workItem from="1772616603685" duration="9854000" />
+      <workItem from="1772826750201" duration="8491000" />
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header">
+      <option name="closed" value="true" />
+      <created>1772633038409</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1772633038409</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header">
+      <option name="closed" value="true" />
+      <created>1772633236405</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1772633236405</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,7 +221,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="complete technician profile with name/image updates and field restrictions " />
     <MESSAGE value="feat(auth): implement secure user signup with roles and server actions" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(auth): implement secure user signup with roles and server actions" />
+    <MESSAGE value="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

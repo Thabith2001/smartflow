@@ -1,0 +1,39 @@
+I'll draft a concise note summarizing the backend refactor and provide a few ready-to-paste variants you can use (commit message, PR description, release note). I'll include a short checklist of what the note covers.
+Checklist
+ Short single-line commit message
+ Multi-line commit body (detailed)
+ PR description (summary, why, what changed, testing, rollback)
+ Release note / changelog entry
+ Quick copy-paste Slack/PR comment summary
+Short (one-line commit message) feat(auth): replace legacy user.repository with role-specific repos (customer/vendor/manager/admin)
+Multi-line commit message (paste into git editor) Replace the legacy repositories/user.repository.ts with role-specific repositories: repositories/customers.repository.ts, repositories/vendors.repository.ts, repositories/managers.repository.ts, and repositories/admins.repository.ts.
+Auth flows now route registration and login through the appropriate role-specific repository via services/auth.service.ts.
+New services/customers.service.ts and example API route app/api/customers/[id]/route.ts.
+Repositories reuse the existing users collection and enforce role filtering to avoid immediate DB migration.
+The old repositories/user.repository.ts is retained until CI confirms all references have been updated and the build is green.
+Testing / verification
+Run type-check & build: npx tsc -p tsconfig.json --noEmit && npm run build
+Start dev server and smoke-test GET /api/customers/<id>; ensure no password in response.
+Search for leftover references: grep -Rn "user.repository" || true grep -Rn "userRepository" || true
+Rollback
+Revert commits that introduce role-specific repositories and restore previous services/auth.service.ts if build/tests fail.
+Keep the legacy repositories/user.repository.ts until final removal commit after CI passes.
+PR description (ready to paste) Summary
+Replace the single user.repository pattern with four role-specific repositories to clarify domain responsibilities: customer, vendor, manager, and admin.
+Update services/auth.service.ts to use role-aware creation and lookup.
+Add services/customers.service.ts and GET app/api/customers/[id]/route.ts as an example consumer.
+Why
+Improves code clarity and prepares the codebase for role-specific business logic.
+Avoids an immediate database migration by keeping a single users collection and enforcing role filtering at the repository level.
+What changed
+New files: repositories/customers.repository.ts, repositories/vendors.repository.ts, repositories/managers.repository.ts, repositories/admins.repository.ts, services/customers.service.ts, app/api/customers/[id]/route.ts.
+Modified: services/auth.service.ts (now uses role-specific repos).
+Legacy: repositories/user.repository.ts retained until CI/build is green.
+How to test
+Type-check & build: npx tsc -p tsconfig.json --noEmit && npm run build
+Dev server: npm run dev
+Smoke test: curl -i http://localhost:3000/api/customers/<id></id>
+Rollback plan
+Revert the refactor commits and restore repositories/user.repository.ts if any critical failures occur.
+Release note / changelog entry Refactor: Split monolithic user repository into role-specific repositories (customer/vendor/manager/admin) and update authentication flows to use role-aware repositories. No DB schema changes — the users collection is reused with role filtering. CI must pass before removing legacy user.repository.ts.
+Short PR/Slack summary (1-2 lines) Refactor: replaced legacy user.repository with role-specific repositories (customer/vendor/manager/admin) and updated services/auth.service.ts to be role-aware; added customers service and example GET API route. Legacy repo retained until CI passes.

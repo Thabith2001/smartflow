@@ -1,14 +1,13 @@
-'use client';
+"use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import {
   FaBell,
   FaSignInAlt,
   FaBars,
   FaTimes,
-  FaSearch,
   FaUserCircle,
   FaSignOutAlt,
   FaChevronDown,
@@ -19,12 +18,15 @@ import {
   FaLinkedinIn,
   FaShieldAlt,
 } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import type { SafeUser } from '@/types/users.type';
 
-export default function Header({ user, isLoggedIn, onLogout }) {
+// Accept `initialUser` from the server wrapper (read from HttpOnly cookie)
+export default function Header({ initialUser }: { initialUser?: SafeUser | null }) {
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
-  const navLinks = [
+  const navLinks: { name: string; href: string }[] = [
     { name: 'Home', href: '/' },
     { name: 'Lands', href: '/lands' },
     { name: 'Houses', href: '/houses' },
@@ -34,6 +36,41 @@ export default function Header({ user, isLoggedIn, onLogout }) {
     { name: 'Contact Us', href: '/contact' },
   ];
 
+  const router = useRouter();
+  const [user, setUser] = useState<SafeUser | null>(initialUser ?? null);
+
+  // If `initialUser` is undefined (client usage), fetch current user from server
+  useEffect(() => {
+    if (typeof initialUser === 'undefined') {
+      // client-side pages: request /api/auth/me which reads HttpOnly cookie on server
+      fetch('/api/auth/me')
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (data && data.user) setUser(data.user as SafeUser);
+        })
+        .catch(() => {});
+    }
+  }, [initialUser]);
+
+  const isLoggedIn = Boolean(user);
+
+  function onLogout() {
+    // Call server route to clear HttpOnly cookie
+    fetch('/api/auth/logout', { method: 'POST' })
+      .then(() => {
+        setUser(null);
+      })
+      .catch(() => {})
+      .finally(() => {
+        try {
+          router.push('/auth/login');
+        } catch (err) {
+          // ignore
+        }
+      });
+  }
+
+  // console.log('user', user);
   return (
     <>
       {/* MOBILE OVERLAY */}
@@ -83,7 +120,8 @@ export default function Header({ user, isLoggedIn, onLogout }) {
                     className="flex items-center gap-3 group"
                   >
                     <div className="flex flex-col items-end hidden md:flex text-right">
-                      <span className="text-[9px] font-black text-yellow-400 uppercase tracking-widest leading-none mb-1 flex items-center gap-1">
+                      <span
+                        className="text-[9px] font-black text-yellow-400 uppercase tracking-widest leading-none mb-1 flex items-center gap-1">
                         {user?.role === 'technician' && <FaShieldAlt size={8} />}
                         {user?.role}
                       </span>
@@ -95,7 +133,8 @@ export default function Header({ user, isLoggedIn, onLogout }) {
                         />
                       </div>
                     </div>
-                    <div className="h-10 w-10 md:h-11 md:w-11 bg-blue-800 border-2 border-yellow-400 flex items-center justify-center group-hover:bg-yellow-400 transition-all">
+                    <div
+                      className="h-10 w-10 md:h-11 md:w-11 bg-blue-800 border-2 border-yellow-400 flex items-center justify-center group-hover:bg-yellow-400 transition-all">
                       <span className="text-white group-hover:text-blue-900 text-lg font-black">
                         {user?.name?.charAt(0)}
                       </span>
@@ -104,7 +143,8 @@ export default function Header({ user, isLoggedIn, onLogout }) {
 
                   {/* DROPDOWN */}
                   {profileOpen && (
-                    <div className="absolute right-0 mt-3 w-52 bg-white shadow-2xl border border-gray-100 py-1 flex flex-col">
+                    <div
+                      className="absolute right-0 mt-3 w-52 bg-white shadow-2xl border border-gray-100 py-1 flex flex-col">
                       <Link
                         href="/profile"
                         onClick={() => setProfileOpen(false)}
@@ -126,7 +166,8 @@ export default function Header({ user, isLoggedIn, onLogout }) {
                   href="/auth/login"
                   className="flex items-center gap-2 bg-yellow-400 px-5 md:px-8 py-2 md:py-3 text-[11px] font-black uppercase tracking-widest text-blue-900 hover:bg-white transition-all"
                 >
-                  <FaSignInAlt size={13} /> <span className="hidden sm:inline">Login</span>
+                  <FaSignInAlt size={13} /> <span
+                  className="hidden sm:inline">{user?.name || 'Login'}</span>
                 </Link>
               )}
             </div>
@@ -178,7 +219,8 @@ export default function Header({ user, isLoggedIn, onLogout }) {
           {isLoggedIn ? (
             <div className="flex flex-col gap-5">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 bg-blue-900 flex items-center justify-center font-black text-yellow-400 text-xl border-2 border-yellow-400">
+                <div
+                  className="h-12 w-12 bg-blue-900 flex items-center justify-center font-black text-yellow-400 text-xl border-2 border-yellow-400">
                   {user?.name?.charAt(0)}
                 </div>
                 <div className="flex flex-col">
