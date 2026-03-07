@@ -4,27 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6d08b150-d085-4726-84de-7abc7fdf5191" name="Changes" comment="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header">
-      <change afterPath="$PROJECT_DIR$/ReadMe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/manager/customers/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repositories/accounts.repository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repositories/admin.repository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repositories/customer.repository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repositories/manager.repository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repositories/vendor.repository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/customers.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/auth/me/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/auth/me/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/PurchaseModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/PurchaseModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/SearchBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/SearchBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/home/FeaturedProperties.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/home/FeaturedProperties.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/admin/customers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/admin/customers/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/customers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/customers/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/manager/tickets/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/manager/tickets/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/user.repository.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/auth.service.ts" afterDir="false" />
-    </list>
+    <list default="true" id="6d08b150-d085-4726-84de-7abc7fdf5191" name="Changes" comment="Summary&#10;We replaced the single legacy user repository pattern with role-specific repositories to improve clarity and prepare the backend for role-specific business logic.&#10;Roles created: customer, vendor, manager, admin.&#10;Implementation choice: keep the existing users collection to avoid an immediate DB migration; the new repositories enforce role filtering at read/write time.&#10;Files to add (examples): repositories/customers.repository.ts, repositories/vendors.repository.ts, repositories/managers.repository.ts, repositories/admins.repository.ts, services/customers.service.ts. Example API route added: app/api/customers/[id]/route.ts.&#10;Do NOT delete repositories/user.repository.ts until CI/build passes and no references remain.&#10;Why this change&#10;Domain clarity: separate repositories map to domain concepts (each role can develop its own business logic).&#10;Safer rollout: by wrapping the same users collection and only enforcing role at repository layer, we avoid migrating existing data immediately.&#10;Easier future evolution: later we can migrate specific roles to their own collections if required without changing service and route contracts.&#10;Design decisions and rationale&#10;Storage: reuse users collection. Avoid data migration for now.&#10;Each role gets a repository that is a small wrapper over the same collection and adds a role filter (e.g., { role: 'customer' }).&#10;Services mediate domain logic and call repositories. Auth service will route creation to the appropriate repository and use a role-agnostic lookup helper for login.&#10;Keep DTOs in dto/user.dto.ts and types in types/users.type.ts — ensure toSafeUser removes password and other sensitive data.&#10;Repository contract (per-role)&#10;Path pattern: repositories/&lt;role&gt;.repository.ts (e.g., repositories/customers.repository.ts)&#10;Methods:&#10;findById(id: string): Promise&lt;UserDocument | null&gt;&#10;findByEmail(email: string): Promise&lt;UserDocument | null&gt;&#10;create(payload: CreateUserPayload): Promise&lt;userdocument&gt;&lt;/userdocument&gt;&#10;update(id: string, updates: Partial&lt;createuserpayload&gt;): Promise&lt;UserDocument | null&gt;&lt;/createuserpayload&gt;&#10;delete(id: string): Promise&lt;boolean&gt;&lt;/boolean&gt;&#10;findAll(filter?: Partial&lt;userfilter&gt;): Promise&lt;UserDocument[]&gt;&lt;/userfilter&gt;&#10;Implementation notes:&#10;Use getDb() from lib/mongodb.ts.&#10;All queries include { role: '&lt;role&gt;' } filter.&#10;Insert should set role, createdAt, updatedAt.&#10;Service contract (per-role)&#10;Path pattern: services/&lt;role&gt;.service.ts (e.g., services/customers.service.ts)&#10;Methods:&#10;getById(id: string)&#10;list(filter, paging)&#10;create(data)&#10;update(id, data)&#10;Responsibilities:&#10;Validate inputs, map DTOs, call repository, remove sensitive fields before returning.&#10;Auth flow changes&#10;Registration:&#10;services/auth.service.ts will pick the repository based on the incoming role and call create there.&#10;Password hashing (bcrypt) and session creation remain in auth service.&#10;Login:&#10;Add helper findUserByEmailAcrossRoles(email) that checks role repositories in order (customers → vendors → managers → admins) and returns the first user found.&#10;Compare hashed password and create a session as before.&#10;This keeps auth centralized but rolespecific creation and user lookup in repositories.&#10;Example API route behavior (GET customer by id)&#10;Endpoint: GET /api/customers/:id — file app/api/customers/[id]/route.ts&#10;Behavior:&#10;Validate id param.&#10;Call services/customers.service.ts -&gt; getById(id).&#10;If not found: return 404.&#10;Strip sensitive fields (e.g., password) before sending JSON 200." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,12 +66,22 @@
     &quot;assignee&quot;: &quot;Thabith2001&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:thabith2001/smartflow.git&quot;,
-    &quot;accountId&quot;: &quot;ad42e5c3-d9cf-439f-aa7b-037e6afcd84c&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:thabith2001/smartflow.git",
+    "accountId": "ad42e5c3-d9cf-439f-aa7b-037e6afcd84c"
+  },
+  "recentNewPullRequestHead": {
+    "server": {
+      "useHttp": false,
+      "host": "github.com",
+      "port": null,
+      "suffix": null
+    },
+    "owner": "thabith2001",
+    "repository": "smartflow"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -108,30 +98,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;com.github.patou.gitmoji.migration-offered&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;01-backend-devlop&quot;,
-    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
-    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/thabiththabith/group_projects/smartflow/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.github.patou.gitmoji.migration-offered": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "#1 on 01-backend-devlop",
+    "javascript.preferred.runtime.type.id": "node",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/thabiththabith/group_projects/smartflow/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -194,7 +184,7 @@
       <workItem from="1770389834801" duration="183000" />
       <workItem from="1770390377657" duration="9500000" />
       <workItem from="1772616603685" duration="9854000" />
-      <workItem from="1772826750201" duration="8491000" />
+      <workItem from="1772826750201" duration="8809000" />
     </task>
     <task id="LOCAL-00002" summary="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header">
       <option name="closed" value="true" />
@@ -212,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772633236405</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Summary&#10;We replaced the single legacy user repository pattern with role-specific repositories to improve clarity and prepare the backend for role-specific business logic.&#10;Roles created: customer, vendor, manager, admin.&#10;Implementation choice: keep the existing users collection to avoid an immediate DB migration; the new repositories enforce role filtering at read/write time.&#10;Files to add (examples): repositories/customers.repository.ts, repositories/vendors.repository.ts, repositories/managers.repository.ts, repositories/admins.repository.ts, services/customers.service.ts. Example API route added: app/api/customers/[id]/route.ts.&#10;Do NOT delete repositories/user.repository.ts until CI/build passes and no references remain.&#10;Why this change&#10;Domain clarity: separate repositories map to domain concepts (each role can develop its own business logic).&#10;Safer rollout: by wrapping the same users collection and only enforcing role at repository layer, we avoid migrating existing data immediately.&#10;Easier future evolution: later we can migrate specific roles to their own collections if required without changing service and route contracts.&#10;Design decisions and rationale&#10;Storage: reuse users collection. Avoid data migration for now.&#10;Each role gets a repository that is a small wrapper over the same collection and adds a role filter (e.g., { role: 'customer' }).&#10;Services mediate domain logic and call repositories. Auth service will route creation to the appropriate repository and use a role-agnostic lookup helper for login.&#10;Keep DTOs in dto/user.dto.ts and types in types/users.type.ts — ensure toSafeUser removes password and other sensitive data.&#10;Repository contract (per-role)&#10;Path pattern: repositories/&lt;role&gt;.repository.ts (e.g., repositories/customers.repository.ts)&#10;Methods:&#10;findById(id: string): Promise&lt;UserDocument | null&gt;&#10;findByEmail(email: string): Promise&lt;UserDocument | null&gt;&#10;create(payload: CreateUserPayload): Promise&lt;userdocument&gt;&lt;/userdocument&gt;&#10;update(id: string, updates: Partial&lt;createuserpayload&gt;): Promise&lt;UserDocument | null&gt;&lt;/createuserpayload&gt;&#10;delete(id: string): Promise&lt;boolean&gt;&lt;/boolean&gt;&#10;findAll(filter?: Partial&lt;userfilter&gt;): Promise&lt;UserDocument[]&gt;&lt;/userfilter&gt;&#10;Implementation notes:&#10;Use getDb() from lib/mongodb.ts.&#10;All queries include { role: '&lt;role&gt;' } filter.&#10;Insert should set role, createdAt, updatedAt.&#10;Service contract (per-role)&#10;Path pattern: services/&lt;role&gt;.service.ts (e.g., services/customers.service.ts)&#10;Methods:&#10;getById(id: string)&#10;list(filter, paging)&#10;create(data)&#10;update(id, data)&#10;Responsibilities:&#10;Validate inputs, map DTOs, call repository, remove sensitive fields before returning.&#10;Auth flow changes&#10;Registration:&#10;services/auth.service.ts will pick the repository based on the incoming role and call create there.&#10;Password hashing (bcrypt) and session creation remain in auth service.&#10;Login:&#10;Add helper findUserByEmailAcrossRoles(email) that checks role repositories in order (customers → vendors → managers → admins) and returns the first user found.&#10;Compare hashed password and create a session as before.&#10;This keeps auth centralized but rolespecific creation and user lookup in repositories.&#10;Example API route behavior (GET customer by id)&#10;Endpoint: GET /api/customers/:id — file app/api/customers/[id]/route.ts&#10;Behavior:&#10;Validate id param.&#10;Call services/customers.service.ts -&gt; getById(id).&#10;If not found: return 404.&#10;Strip sensitive fields (e.g., password) before sending JSON 200.">
+      <option name="closed" value="true" />
+      <created>1772890402410</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1772890402410</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,7 +220,8 @@
     <MESSAGE value="complete technician profile with name/image updates and field restrictions " />
     <MESSAGE value="feat(auth): implement secure user signup with roles and server actions" />
     <MESSAGE value="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed the layout to manage jwt token and update session handling + removed unused code and updated imports + fixed the header" />
+    <MESSAGE value="Summary&#10;We replaced the single legacy user repository pattern with role-specific repositories to improve clarity and prepare the backend for role-specific business logic.&#10;Roles created: customer, vendor, manager, admin.&#10;Implementation choice: keep the existing users collection to avoid an immediate DB migration; the new repositories enforce role filtering at read/write time.&#10;Files to add (examples): repositories/customers.repository.ts, repositories/vendors.repository.ts, repositories/managers.repository.ts, repositories/admins.repository.ts, services/customers.service.ts. Example API route added: app/api/customers/[id]/route.ts.&#10;Do NOT delete repositories/user.repository.ts until CI/build passes and no references remain.&#10;Why this change&#10;Domain clarity: separate repositories map to domain concepts (each role can develop its own business logic).&#10;Safer rollout: by wrapping the same users collection and only enforcing role at repository layer, we avoid migrating existing data immediately.&#10;Easier future evolution: later we can migrate specific roles to their own collections if required without changing service and route contracts.&#10;Design decisions and rationale&#10;Storage: reuse users collection. Avoid data migration for now.&#10;Each role gets a repository that is a small wrapper over the same collection and adds a role filter (e.g., { role: 'customer' }).&#10;Services mediate domain logic and call repositories. Auth service will route creation to the appropriate repository and use a role-agnostic lookup helper for login.&#10;Keep DTOs in dto/user.dto.ts and types in types/users.type.ts — ensure toSafeUser removes password and other sensitive data.&#10;Repository contract (per-role)&#10;Path pattern: repositories/&lt;role&gt;.repository.ts (e.g., repositories/customers.repository.ts)&#10;Methods:&#10;findById(id: string): Promise&lt;UserDocument | null&gt;&#10;findByEmail(email: string): Promise&lt;UserDocument | null&gt;&#10;create(payload: CreateUserPayload): Promise&lt;userdocument&gt;&lt;/userdocument&gt;&#10;update(id: string, updates: Partial&lt;createuserpayload&gt;): Promise&lt;UserDocument | null&gt;&lt;/createuserpayload&gt;&#10;delete(id: string): Promise&lt;boolean&gt;&lt;/boolean&gt;&#10;findAll(filter?: Partial&lt;userfilter&gt;): Promise&lt;UserDocument[]&gt;&lt;/userfilter&gt;&#10;Implementation notes:&#10;Use getDb() from lib/mongodb.ts.&#10;All queries include { role: '&lt;role&gt;' } filter.&#10;Insert should set role, createdAt, updatedAt.&#10;Service contract (per-role)&#10;Path pattern: services/&lt;role&gt;.service.ts (e.g., services/customers.service.ts)&#10;Methods:&#10;getById(id: string)&#10;list(filter, paging)&#10;create(data)&#10;update(id, data)&#10;Responsibilities:&#10;Validate inputs, map DTOs, call repository, remove sensitive fields before returning.&#10;Auth flow changes&#10;Registration:&#10;services/auth.service.ts will pick the repository based on the incoming role and call create there.&#10;Password hashing (bcrypt) and session creation remain in auth service.&#10;Login:&#10;Add helper findUserByEmailAcrossRoles(email) that checks role repositories in order (customers → vendors → managers → admins) and returns the first user found.&#10;Compare hashed password and create a session as before.&#10;This keeps auth centralized but rolespecific creation and user lookup in repositories.&#10;Example API route behavior (GET customer by id)&#10;Endpoint: GET /api/customers/:id — file app/api/customers/[id]/route.ts&#10;Behavior:&#10;Validate id param.&#10;Call services/customers.service.ts -&gt; getById(id).&#10;If not found: return 404.&#10;Strip sensitive fields (e.g., password) before sending JSON 200." />
+    <option name="LAST_COMMIT_MESSAGE" value="Summary&#10;We replaced the single legacy user repository pattern with role-specific repositories to improve clarity and prepare the backend for role-specific business logic.&#10;Roles created: customer, vendor, manager, admin.&#10;Implementation choice: keep the existing users collection to avoid an immediate DB migration; the new repositories enforce role filtering at read/write time.&#10;Files to add (examples): repositories/customers.repository.ts, repositories/vendors.repository.ts, repositories/managers.repository.ts, repositories/admins.repository.ts, services/customers.service.ts. Example API route added: app/api/customers/[id]/route.ts.&#10;Do NOT delete repositories/user.repository.ts until CI/build passes and no references remain.&#10;Why this change&#10;Domain clarity: separate repositories map to domain concepts (each role can develop its own business logic).&#10;Safer rollout: by wrapping the same users collection and only enforcing role at repository layer, we avoid migrating existing data immediately.&#10;Easier future evolution: later we can migrate specific roles to their own collections if required without changing service and route contracts.&#10;Design decisions and rationale&#10;Storage: reuse users collection. Avoid data migration for now.&#10;Each role gets a repository that is a small wrapper over the same collection and adds a role filter (e.g., { role: 'customer' }).&#10;Services mediate domain logic and call repositories. Auth service will route creation to the appropriate repository and use a role-agnostic lookup helper for login.&#10;Keep DTOs in dto/user.dto.ts and types in types/users.type.ts — ensure toSafeUser removes password and other sensitive data.&#10;Repository contract (per-role)&#10;Path pattern: repositories/&lt;role&gt;.repository.ts (e.g., repositories/customers.repository.ts)&#10;Methods:&#10;findById(id: string): Promise&lt;UserDocument | null&gt;&#10;findByEmail(email: string): Promise&lt;UserDocument | null&gt;&#10;create(payload: CreateUserPayload): Promise&lt;userdocument&gt;&lt;/userdocument&gt;&#10;update(id: string, updates: Partial&lt;createuserpayload&gt;): Promise&lt;UserDocument | null&gt;&lt;/createuserpayload&gt;&#10;delete(id: string): Promise&lt;boolean&gt;&lt;/boolean&gt;&#10;findAll(filter?: Partial&lt;userfilter&gt;): Promise&lt;UserDocument[]&gt;&lt;/userfilter&gt;&#10;Implementation notes:&#10;Use getDb() from lib/mongodb.ts.&#10;All queries include { role: '&lt;role&gt;' } filter.&#10;Insert should set role, createdAt, updatedAt.&#10;Service contract (per-role)&#10;Path pattern: services/&lt;role&gt;.service.ts (e.g., services/customers.service.ts)&#10;Methods:&#10;getById(id: string)&#10;list(filter, paging)&#10;create(data)&#10;update(id, data)&#10;Responsibilities:&#10;Validate inputs, map DTOs, call repository, remove sensitive fields before returning.&#10;Auth flow changes&#10;Registration:&#10;services/auth.service.ts will pick the repository based on the incoming role and call create there.&#10;Password hashing (bcrypt) and session creation remain in auth service.&#10;Login:&#10;Add helper findUserByEmailAcrossRoles(email) that checks role repositories in order (customers → vendors → managers → admins) and returns the first user found.&#10;Compare hashed password and create a session as before.&#10;This keeps auth centralized but rolespecific creation and user lookup in repositories.&#10;Example API route behavior (GET customer by id)&#10;Endpoint: GET /api/customers/:id — file app/api/customers/[id]/route.ts&#10;Behavior:&#10;Validate id param.&#10;Call services/customers.service.ts -&gt; getById(id).&#10;If not found: return 404.&#10;Strip sensitive fields (e.g., password) before sending JSON 200." />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
