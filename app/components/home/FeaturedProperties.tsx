@@ -96,7 +96,7 @@ const FeaturedProperties = () => {
                         <div className="flex items-center gap-2">
                           <Square size={16} className="text-blue-900" />
                           <span className="text-sm font-black text-blue-900">
-                            {item.sqft?.toLocaleString()}{' '}
+                            {item.landSize?.toLocaleString()}{' '}
                             <span className="text-gray-400 font-normal">Sqft</span>
                           </span>
                         </div>

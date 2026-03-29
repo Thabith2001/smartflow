@@ -65,7 +65,7 @@ const milestones = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
-      <Header/>
+      <Header />
 
       {/* --- HERO SECTION --- */}
       <section className="relative py-32 bg-[#0A1D37] text-white overflow-hidden">
